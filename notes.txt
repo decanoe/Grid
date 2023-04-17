@@ -1,0 +1,40 @@
+dans le code :
+    #pragma once
+        dans le .h avec definition partielle des fonctions + definition complete des structures
+    #include ".h"
+        dans le .cpp avec definition complete des fonctions
+
+    puis #include ".h" dans les autres fichiers necessitant l'inclusion
+
+à la compilation :
+    analyse lexicale -> syntaxique (enchainement des lexèmes) -> sémantique (cohérence des types) -> generation de code assembler -> traduction en binaire
+        = 1 module objet (non executable)
+    
+    pour compiler 1 class :
+        g++ -Wall -C class.cpp -o class.o
+            -Wall pour les warning
+            -C pour la creation d'un module objet
+    
+    creer une edition de lien (un executable):
+        g++ class1.o class2.o class3.o programMain.o -o executable.exe
+
+
+Automatisation :
+    outil make -> Makefile
+
+    structure d'un Makefile : (les dépendances sont des cibles)
+
+        cible1: dependance1.1 ... dependance1.N
+            commande1.1
+            ...
+            commande1.M
+        cible1: dependance2.1 ... dependance2.X
+            commande2.1
+            ...
+            commande2.Y
+    
+    pour executer :
+        make cible1
+            (ou juste make pour la première cible)
+    
+    generateur de Makefile : cmake
