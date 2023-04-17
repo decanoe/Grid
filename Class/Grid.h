@@ -6,9 +6,9 @@ private:
     int* values;
 public:
     unsigned int size;
-    unsigned int penality;
+    unsigned int penalty;
 
-    Grid(int size, int penality);
+    Grid(int size, int penalty);
     int Access(int x, int y);
 };
 
