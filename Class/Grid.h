@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 class Grid
 {
@@ -15,10 +16,10 @@ public:
 class Solution
 {
 private:
-    int* color;
+    std::string* color;
 public:
     unsigned int size;
 
     Solution(int size);
-    int Access(int x, int y);
+    std::string Access(int x, int y);
 };

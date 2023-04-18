@@ -1,5 +1,6 @@
 #include "Grid.h"
 #include <iostream>
+#include <string>
 
 Grid::Grid(int size, int penality)
 {
@@ -10,7 +11,7 @@ Grid::Grid(int size, int penality)
 /* Acces the value in the (x, y) cell of the grid */
 int Grid::Access(int x, int y)
 {
-    // throws an error if the requested value is outside of the grid
+    // return 0 if the requested value is outside of the grid
     if (x < 0 || y < 0 || x >= this->size || y >= this->size)
     {
         std::cerr << "ERROR : value outside of the grid";
@@ -24,17 +25,16 @@ int Grid::Access(int x, int y)
 
 Solution::Solution(int size)
 {
-    this->color = new int[size * size];
+    this->color = new std::string[size * size];
     this->size = size;
 }
 /* Acces the color in the (x, y) cell of the solution */
-int Solution::Access(int x, int y)
+std::string Solution::Access(int x, int y)
 {
-    // throws an error if the requested color is outside of the solution
+    // return an empty string if the requested color is outside of the solution
     if (x < 0 || y < 0 || x >= this->size || y >= this->size)
     {
-        std::cerr << "ERROR : value outside of the grid";
-        return 0;
+        return "";
     }
     
     return color[x + y * this->size];
