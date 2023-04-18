@@ -81,10 +81,7 @@ int computeScore(Grid G, Solution S)
     int green_score = 0;
     int red_score = 0;
 
-    int yellow_penalty = 0;
-    int green_penalty = 0;
     int blue_penalty = 0;
-    int orange_penalty = 0;
 
     for (int x = 0; x < G.size; ++x)
     {
@@ -98,20 +95,20 @@ int computeScore(Grid G, Solution S)
             else if (S.Access(x, y) == "J")
             {
                 yellow_score += G.Access(x, y);
-                if (!adjacent(S, x, y)) yellow_penalty += 1;
+                if (!adjacent(S, x, y)) penalty_count += 1;
             }
             else if (S.Access(x, y) == "V")
             {
                 green_score += G.Access(x, y) + G.Access(x, y - 1)
                              + G.Access(x - 1, y) + G.Access(x + 1, y) + G.Access(x, y + 1);
-                green_penalty += adjacentPairCount(S, x, y);
+                penalty_count += adjacentPairCount(S, x, y);
             }
             else if (S.Access(x, y) == "B")
             {
                 if (G.Access(x, y) < 0) blue_penalty += 1;
                 else if (G.Access(x, y) > 0) blue_penalty -= 1;
             }
-            else if (S.Access(x, y) == "O") orange_penalty += queenPairCount(S, x, y);
+            else if (S.Access(x, y) == "O") penalty_count += queenPairCount(S, x, y);
             else if (S.Access(x,y) == "R") red_score += -G.Access(x, y);
         }
     }
@@ -123,5 +120,5 @@ int computeScore(Grid G, Solution S)
     if (black_count <= G.size) black_score *= 2;
 
     return black_score + red_score + yellow_score + green_score
-           - (yellow_penalty + green_penalty + blue_penalty + orange_penalty)*G.penalty;
+           - penalty_count*G.penalty;
 }
