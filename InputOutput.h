@@ -1,3 +1,5 @@
 #include "Class/Grid.h"
-#include <iostream>
-#include <fstream>
+#include <string>
+
+Grid ReadGrid(std::string filePath);
+void WriteSolution(const Solution& S, std::string filePath);

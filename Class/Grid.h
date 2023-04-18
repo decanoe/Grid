@@ -11,6 +11,7 @@ public:
 
     Grid(int size, int penalty);
     int Access(int x, int y);
+    int Write(int x, int y, int value);
 };
 
 class Solution
