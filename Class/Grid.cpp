@@ -30,6 +30,18 @@ int& Grid::Access(int x, int y)
     
     return values[x + y * this->size];
 }
+// show the grid in the terminal
+void Grid::Print()
+{
+    for (int x = 0; x < this->size; x++)
+    {
+        for (int y = 0; y < this->size; y++)
+        {
+            std::cout << this->Access(x, y) << "\t";
+        }
+        std::cout << "\n";
+    }
+}
 
 // ======================================================================================================
 
@@ -39,7 +51,7 @@ Solution::Solution(int size)
     this->size = size;
 }
 /* Acces the color in the (x, y) cell of the solution */
-std::string Solution::Access(int x, int y)
+std::string Solution::Access(int x, int y) const
 {
     // return an empty string if the requested color is outside of the solution
     if (x < 0 || y < 0 || x >= this->size || y >= this->size)
@@ -48,4 +60,27 @@ std::string Solution::Access(int x, int y)
     }
     
     return color[x + y * this->size];
+}
+std::string& Solution::Access(int x, int y)
+{
+    // return an error if the requested value is outside of the grid
+    if (x < 0 || y < 0 || x >= this->size || y >= this->size)
+    {
+        std::cerr << "ERROR : value outside of the solution";
+        return this->color[0];
+    }
+    
+    return this->color[x + y * this->size];
+}
+// show the Solution in the terminal
+void Solution::Print()
+{
+    for (int x = 0; x < this->size; x++)
+    {
+        for (int y = 0; y < this->size; y++)
+        {
+            std::cout << this->Access(x, y) << "\t";
+        }
+        std::cout << "\n";
+    }
 }

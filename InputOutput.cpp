@@ -8,9 +8,9 @@ Grid ReadGrid(std::string filePath)
 {
     std::ifstream file = std::ifstream(filePath);
 
-    int size, penality;
-    file >> size >> penality;
-    Grid G(size, penality);
+    int size, penalty;
+    file >> size >> penalty;
+    Grid G(size, penalty);
 
     for (int x = 0; x < size; x++)
     for (int y = 0; y < size; y++)
@@ -20,7 +20,22 @@ Grid ReadGrid(std::string filePath)
 
     return G;
 }
+Solution ReadSolution(std::string filePath)
+{
+    std::ifstream file = std::ifstream(filePath);
 
+    int size;
+    file >> size;
+    Solution S(size);
+
+    for (int x = 0; x < size; x++)
+    for (int y = 0; y < size; y++)
+    {
+        file >> S.Access(x, y);
+    }
+
+    return S;
+}
 
 void WriteSolution(Grid& G, Solution& S, std::string filePath)
 {

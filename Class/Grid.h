@@ -12,6 +12,7 @@ public:
     Grid(int size, int penalty);
     int Access(int x, int y) const;
     int& Access(int x, int y);
+    void Print();
 };
 
 class Solution
@@ -22,5 +23,7 @@ public:
     int size;
 
     Solution(int size);
-    std::string Access(int x, int y);
+    std::string Access(int x, int y) const;
+    std::string& Access(int x, int y);
+    void Print();
 };
