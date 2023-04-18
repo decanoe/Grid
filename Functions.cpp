@@ -35,39 +35,17 @@ int adjacentPairCount(Solution S, int x, int y)
 int queenPairCount(Solution S, int x, int y)
 {
     int count = 0;
-    int i = 1;
+    int n = std::max(S.size - x, S.size - y);
 
     // Four cases treated : top-right, right, bottom-right and bottom
-    while (S.Read(x + i, y - i) != 'e')
+    for (int i = 1; i < n; ++i)
     {
         if (S.Read(x, y) == S.Read(x + i, y - i)) count += 1;
-        i++;
-    };
-
-    i = 1;
-
-    while (S.Read(x + i, y) != 'e')
-    {
         if (S.Read(x, y) == S.Read(x + i, y)) count += 1;
-        i++;
-    }
-
-    i = 1;
-
-    while (S.Read(x + i, y + i) != 'e')
-    {
         if (S.Read(x, y) == S.Read(x + i, y + i)) count += 1;
-        i++;
-    }
-
-    i = 1;
-
-    while (S.Read(x, y + i) != 'e')
-    {
         if (S.Read(x, y) == S.Read(x, y + i)) count += 1;
-        i++;
     }
-
+    
     return count;
 }
 
