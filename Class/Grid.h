@@ -10,8 +10,8 @@ public:
     unsigned int penalty;
 
     Grid(int size, int penalty);
-    int Access(int x, int y);
-    int Write(int x, int y, int value);
+    int Access(int x, int y) const;
+    int& Access(int x, int y);
 };
 
 class Solution

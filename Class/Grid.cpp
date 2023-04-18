@@ -9,13 +9,23 @@ Grid::Grid(int size, int penalty)
     this->penalty = penalty;
 }
 /* Acces the value in the (x, y) cell of the grid */
-int Grid::Access(int x, int y)
+int Grid::Access(int x, int y) const
 {
     // return 0 if the requested value is outside of the grid
     if (x < 0 || y < 0 || x >= this->size || y >= this->size)
     {
-        std::cerr << "ERROR : value outside of the grid";
         return 0;
+    }
+    
+    return values[x + y * this->size];
+}
+int& Grid::Access(int x, int y)
+{
+    // return an error if the requested value is outside of the grid
+    if (x < 0 || y < 0 || x >= this->size || y >= this->size)
+    {
+        std::cerr << "ERROR : value outside of the grid";
+        return;
     }
     
     return values[x + y * this->size];

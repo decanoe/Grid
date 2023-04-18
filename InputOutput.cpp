@@ -14,7 +14,7 @@ Grid ReadGrid(std::string filePath)
     for (int x = 0; x < size; x++)
     for (int y = 0; y < size; y++)
     {
-        /* code */
+        file >> G.Access(x, y);
     }
 
     return G;
