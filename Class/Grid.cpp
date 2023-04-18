@@ -2,11 +2,11 @@
 #include <iostream>
 #include <string>
 
-Grid::Grid(int size, int penality)
+Grid::Grid(int size, int penalty)
 {
     this->values = new int[size * size];
     this->size = size;
-    this->penality = penality;
+    this->penalty = penalty;
 }
 /* Acces the value in the (x, y) cell of the grid */
 int Grid::Access(int x, int y)
