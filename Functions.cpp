@@ -43,7 +43,7 @@ int queenPairCount(Solution S, int x, int y)
         i++;
     };
 
-    int i = 1;
+    i = 1;
 
     while (S.Access(x + i, y) != "")
     {
@@ -51,7 +51,7 @@ int queenPairCount(Solution S, int x, int y)
         i++;
     }
 
-    int i = 1;
+    i = 1;
 
     while (S.Access(x + i, y + i) != "")
     {
@@ -59,7 +59,7 @@ int queenPairCount(Solution S, int x, int y)
         i++;
     }
 
-    int i = 1;
+    i = 1;
 
     while (S.Access(x, y + i) != "")
     {

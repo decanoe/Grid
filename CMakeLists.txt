@@ -1,11 +1,26 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(Grid VERSION 0.1.0)
 
-include(CTest)
-enable_testing()
+# include(CTest)
+# enable_testing()
 
-add_executable(Grid main.cpp)
 
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
+# set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+# set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+# include(CPack)
+
+
+set(SRCS
+    main.cpp
+    Functions.cpp
+    InputOutput.cpp
+    Class/Grid.cpp
+    )
+    
+    set(HEADERS
+    Functions.h
+    InputOutput.h
+    Class/Grid.h
+    )
+    
+add_executable(Grid ${SRCS} ${HEADERS})
