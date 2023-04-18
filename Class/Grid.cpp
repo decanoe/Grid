@@ -46,7 +46,7 @@ void Grid::Print()
 
 Solution::Solution(int size)
 {
-    this->color = new std::string[size * size];
+    this->color = new char[size * size];
     this->size = size;
 }
 /* Acces the color in the (x, y) cell of the solution */
