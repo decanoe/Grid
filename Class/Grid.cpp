@@ -1,6 +1,6 @@
-#include "Grid.h"
 #include <iostream>
 #include <string>
+#include "Grid.h"
 
 Grid::Grid(int size, int penalty)
 {
@@ -25,7 +25,7 @@ int& Grid::Access(int x, int y)
     if (x < 0 || y < 0 || x >= this->size || y >= this->size)
     {
         std::cerr << "ERROR : value outside of the grid";
-        return;
+        return values[0];
     }
     
     return values[x + y * this->size];
