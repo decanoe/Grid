@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 #include "Grid.h"
 
 Grid::Grid(int size, int penalty)
@@ -51,17 +50,17 @@ Solution::Solution(int size)
     this->size = size;
 }
 /* Acces the color in the (x, y) cell of the solution */
-std::string Solution::Read(int x, int y) const
+char Solution::Read(int x, int y) const
 {
     // return an empty string if the requested color is outside of the solution
     if (x < 0 || y < 0 || x >= this->size || y >= this->size)
     {
-        return "";
+        return 'e';
     }
     
     return color[x + y * this->size];
 }
-std::string& Solution::Access(int x, int y)
+char& Solution::Access(int x, int y)
 {
     // return an error if the requested value is outside of the grid
     if (x < 0 || y < 0 || x >= this->size || y >= this->size)

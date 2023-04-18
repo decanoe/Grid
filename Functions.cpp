@@ -74,7 +74,7 @@ int queenPairCount(Solution S, int x, int y)
 int computeScore(Grid G, Solution S)
 {
     int penalty_count = 0;
-
+    
     int black_count = 0;
     int black_score = 0;
     int yellow_score = 0;
