@@ -1,17 +1,18 @@
 #include "Functions.h"
 #include "Class/Grid.h"
+#include <iostream>
 
 /*Returns true if the same color is on a surrounding cell*/
 bool adjacent(Solution S, int x, int y)
 {
-    if (S.Read(x, y) == S.Read(x - 1, y - 1) && (S.Read(x - 1, y - 1) != "")) return true;
-    if (S.Read(x, y) == S.Read(x - 1, y) && (S.Read(x - 1, y) != "")) return true;
-    if (S.Read(x, y) == S.Read(x - 1, y + 1) && (S.Read(x - 1, y + 1) != "")) return true;
-    if (S.Read(x, y) == S.Read(x, y - 1) && (S.Read(x, y - 1) != "")) return true;
-    if (S.Read(x, y) == S.Read(x, y + 1) && (S.Read(x, y + 1) != "")) return true;
-    if (S.Read(x, y) == S.Read(x + 1, y - 1) && (S.Read(x + 1, y - 1) != "")) return true;
-    if (S.Read(x, y) == S.Read(x + 1, y) && (S.Read(x + 1, y) != "")) return true;
-    if (S.Read(x, y) == S.Read(x + 1, y + 1) && (S.Read(x + 1, y + 1) != "")) return true;
+    if (S.Read(x, y) == S.Read(x - 1, y - 1)) return true;
+    if (S.Read(x, y) == S.Read(x - 1, y)) return true;
+    if (S.Read(x, y) == S.Read(x - 1, y + 1)) return true;
+    if (S.Read(x, y) == S.Read(x, y - 1)) return true;
+    if (S.Read(x, y) == S.Read(x, y + 1)) return true;
+    if (S.Read(x, y) == S.Read(x + 1, y - 1)) return true;
+    if (S.Read(x, y) == S.Read(x + 1, y)) return true;
+    if (S.Read(x, y) == S.Read(x + 1, y + 1)) return true;
     
     return false;
 }
@@ -22,10 +23,10 @@ int adjacentPairCount(Solution S, int x, int y)
     int count = 0;
 
     // Four cases treated : top-right, right, bottom-right and bottom
-    if (S.Read(x, y) == S.Read(x + 1, y - 1) && (S.Read(x - 1, y + 1) != "")) count += 1;
-    if (S.Read(x, y) == S.Read(x + 1, y) && (S.Read(x, y + 1) != "")) count += 1;
-    if (S.Read(x, y) == S.Read(x + 1, y + 1) && (S.Read(x + 1, y + 1) != "")) count += 1;
-    if (S.Read(x, y) == S.Read(x, y + 1) && (S.Read(x + 1, y) != "")) count += 1;
+    if (S.Read(x, y) == S.Read(x + 1, y - 1)) count += 1;
+    if (S.Read(x, y) == S.Read(x + 1, y)) count += 1;
+    if (S.Read(x, y) == S.Read(x + 1, y + 1)) count += 1;
+    if (S.Read(x, y) == S.Read(x, y + 1)) count += 1;
 
     return count;
 }
@@ -37,7 +38,7 @@ int queenPairCount(Solution S, int x, int y)
     int i = 1;
 
     // Four cases treated : top-right, right, bottom-right and bottom
-    while (S.Read(x + i, y - i) != "")
+    while (S.Read(x + i, y - i) != 'e')
     {
         if (S.Read(x, y) == S.Read(x + i, y - i)) count += 1;
         i++;
@@ -45,7 +46,7 @@ int queenPairCount(Solution S, int x, int y)
 
     i = 1;
 
-    while (S.Read(x + i, y) != "")
+    while (S.Read(x + i, y) != 'e')
     {
         if (S.Read(x, y) == S.Read(x + i, y)) count += 1;
         i++;
@@ -53,7 +54,7 @@ int queenPairCount(Solution S, int x, int y)
 
     i = 1;
 
-    while (S.Read(x + i, y + i) != "")
+    while (S.Read(x + i, y + i) != 'e')
     {
         if (S.Read(x, y) == S.Read(x + i, y + i)) count += 1;
         i++;
@@ -61,7 +62,7 @@ int queenPairCount(Solution S, int x, int y)
 
     i = 1;
 
-    while (S.Read(x, y + i) != "")
+    while (S.Read(x, y + i) != 'e')
     {
         if (S.Read(x, y) == S.Read(x, y + i)) count += 1;
         i++;
@@ -87,29 +88,36 @@ int computeScore(Grid G, Solution S)
     {
         for (int y = 0; y < G.size; ++y)
         {
-            if (S.Read(x, y) == "N") 
+            switch (S.Read(x, y))
             {
+            case 'N':
                 ++black_count;
                 black_score += G.Read(x, y) - 1;
-            }
-            else if (S.Read(x, y) == "J")
-            {
+                break;
+            case 'J':
                 yellow_score += G.Read(x, y);
                 if (!adjacent(S, x, y)) penalty_count += 1;
-            }
-            else if (S.Read(x, y) == "V")
-            {
+                break;
+            case 'V':
                 green_score += G.Read(x, y) + G.Read(x, y - 1)
                              + G.Read(x - 1, y) + G.Read(x + 1, y) + G.Read(x, y + 1);
                 penalty_count += adjacentPairCount(S, x, y);
-            }
-            else if (S.Read(x, y) == "B")
-            {
+                break;
+            case 'B':
                 if (G.Read(x, y) < 0) blue_penalty += 1;
                 else if (G.Read(x, y) > 0) blue_penalty -= 1;
+                break;
+            case 'O':
+                penalty_count += queenPairCount(S, x, y);
+                break;
+            case 'R':
+                red_score += -G.Read(x, y);
+                break;
+            
+            default:
+                std::cerr << "Incorrect color in solution at " << x <<  "," << y << std::endl;
+                break;
             }
-            else if (S.Read(x, y) == "O") penalty_count += queenPairCount(S, x, y);
-            else if (S.Read(x,y) == "R") red_score += -G.Read(x, y);
         }
     }
 
