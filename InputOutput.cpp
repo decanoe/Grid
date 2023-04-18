@@ -1,4 +1,5 @@
 #include "Class/Grid.h"
+#include "Functions.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -21,4 +22,23 @@ Grid ReadGrid(std::string filePath)
 }
 
 
-void WriteSolution(const Solution& S, std::string filePath);
+void WriteSolution(Grid& G, Solution& S, std::string filePath)
+{
+    std::ofstream file = std::ofstream(filePath);
+    if (!file)
+    {
+        std::cout << "Writing is not allowed";
+        return;
+    }
+
+    for (int x = 0; x < S.size; x++)
+    {
+        for (int y = 0; y < S.size; y++)
+        {
+            file << S.Access(x, y);
+        }
+        file << "\n";
+    }
+
+    file << computeScore(G, S);
+}

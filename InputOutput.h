@@ -2,4 +2,4 @@
 #include <string>
 
 Grid ReadGrid(std::string filePath);
-void WriteSolution(const Solution& S, std::string filePath);
+void WriteSolution(Grid& G, Solution& S, std::string filePath);
