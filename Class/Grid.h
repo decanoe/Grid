@@ -10,7 +10,7 @@ public:
     int penalty;
 
     Grid(int size, int penalty);
-    int Access(int x, int y) const;
+    int Read(int x, int y) const;
     int& Access(int x, int y);
     void Print();
 };
@@ -23,7 +23,7 @@ public:
     int size;
 
     Solution(int size);
-    std::string Access(int x, int y) const;
+    std::string Read(int x, int y) const;
     std::string& Access(int x, int y);
     void Print();
 };

@@ -4,14 +4,14 @@
 /*Returns true if the same color is on a surrounding cell*/
 bool adjacent(Solution S, int x, int y)
 {
-    if (S.Access(x, y) == S.Access(x - 1, y - 1) && (S.Access(x - 1, y - 1) != "")) return true;
-    if (S.Access(x, y) == S.Access(x - 1, y) && (S.Access(x - 1, y) != "")) return true;
-    if (S.Access(x, y) == S.Access(x - 1, y + 1) && (S.Access(x - 1, y + 1) != "")) return true;
-    if (S.Access(x, y) == S.Access(x, y - 1) && (S.Access(x, y - 1) != "")) return true;
-    if (S.Access(x, y) == S.Access(x, y + 1) && (S.Access(x, y + 1) != "")) return true;
-    if (S.Access(x, y) == S.Access(x + 1, y - 1) && (S.Access(x + 1, y - 1) != "")) return true;
-    if (S.Access(x, y) == S.Access(x + 1, y) && (S.Access(x + 1, y) != "")) return true;
-    if (S.Access(x, y) == S.Access(x + 1, y + 1) && (S.Access(x + 1, y + 1) != "")) return true;
+    if (S.Read(x, y) == S.Read(x - 1, y - 1) && (S.Read(x - 1, y - 1) != "")) return true;
+    if (S.Read(x, y) == S.Read(x - 1, y) && (S.Read(x - 1, y) != "")) return true;
+    if (S.Read(x, y) == S.Read(x - 1, y + 1) && (S.Read(x - 1, y + 1) != "")) return true;
+    if (S.Read(x, y) == S.Read(x, y - 1) && (S.Read(x, y - 1) != "")) return true;
+    if (S.Read(x, y) == S.Read(x, y + 1) && (S.Read(x, y + 1) != "")) return true;
+    if (S.Read(x, y) == S.Read(x + 1, y - 1) && (S.Read(x + 1, y - 1) != "")) return true;
+    if (S.Read(x, y) == S.Read(x + 1, y) && (S.Read(x + 1, y) != "")) return true;
+    if (S.Read(x, y) == S.Read(x + 1, y + 1) && (S.Read(x + 1, y + 1) != "")) return true;
     
     return false;
 }
@@ -22,10 +22,10 @@ int adjacentPairCount(Solution S, int x, int y)
     int count = 0;
 
     // Four cases treated : top-right, right, bottom-right and bottom
-    if (S.Access(x, y) == S.Access(x + 1, y - 1) && (S.Access(x - 1, y + 1) != "")) count += 1;
-    if (S.Access(x, y) == S.Access(x + 1, y) && (S.Access(x, y + 1) != "")) count += 1;
-    if (S.Access(x, y) == S.Access(x + 1, y + 1) && (S.Access(x + 1, y + 1) != "")) count += 1;
-    if (S.Access(x, y) == S.Access(x, y + 1) && (S.Access(x + 1, y) != "")) count += 1;
+    if (S.Read(x, y) == S.Read(x + 1, y - 1) && (S.Read(x - 1, y + 1) != "")) count += 1;
+    if (S.Read(x, y) == S.Read(x + 1, y) && (S.Read(x, y + 1) != "")) count += 1;
+    if (S.Read(x, y) == S.Read(x + 1, y + 1) && (S.Read(x + 1, y + 1) != "")) count += 1;
+    if (S.Read(x, y) == S.Read(x, y + 1) && (S.Read(x + 1, y) != "")) count += 1;
 
     return count;
 }
@@ -37,33 +37,33 @@ int queenPairCount(Solution S, int x, int y)
     int i = 1;
 
     // Four cases treated : top-right, right, bottom-right and bottom
-    while (S.Access(x + i, y - i) != "")
+    while (S.Read(x + i, y - i) != "")
     {
-        if (S.Access(x, y) == S.Access(x + i, y - i)) count += 1;
+        if (S.Read(x, y) == S.Read(x + i, y - i)) count += 1;
         i++;
     };
 
     i = 1;
 
-    while (S.Access(x + i, y) != "")
+    while (S.Read(x + i, y) != "")
     {
-        if (S.Access(x, y) == S.Access(x + i, y)) count += 1;
+        if (S.Read(x, y) == S.Read(x + i, y)) count += 1;
         i++;
     }
 
     i = 1;
 
-    while (S.Access(x + i, y + i) != "")
+    while (S.Read(x + i, y + i) != "")
     {
-        if (S.Access(x, y) == S.Access(x + i, y + i)) count += 1;
+        if (S.Read(x, y) == S.Read(x + i, y + i)) count += 1;
         i++;
     }
 
     i = 1;
 
-    while (S.Access(x, y + i) != "")
+    while (S.Read(x, y + i) != "")
     {
-        if (S.Access(x, y) == S.Access(x, y + i)) count += 1;
+        if (S.Read(x, y) == S.Read(x, y + i)) count += 1;
         i++;
     }
 
@@ -87,29 +87,29 @@ int computeScore(Grid G, Solution S)
     {
         for (int y = 0; y < G.size; ++y)
         {
-            if (S.Access(x, y) == "N") 
+            if (S.Read(x, y) == "N") 
             {
                 ++black_count;
-                black_score += G.Access(x, y) - 1;
+                black_score += G.Read(x, y) - 1;
             }
-            else if (S.Access(x, y) == "J")
+            else if (S.Read(x, y) == "J")
             {
-                yellow_score += G.Access(x, y);
+                yellow_score += G.Read(x, y);
                 if (!adjacent(S, x, y)) penalty_count += 1;
             }
-            else if (S.Access(x, y) == "V")
+            else if (S.Read(x, y) == "V")
             {
-                green_score += G.Access(x, y) + G.Access(x, y - 1)
-                             + G.Access(x - 1, y) + G.Access(x + 1, y) + G.Access(x, y + 1);
+                green_score += G.Read(x, y) + G.Read(x, y - 1)
+                             + G.Read(x - 1, y) + G.Read(x + 1, y) + G.Read(x, y + 1);
                 penalty_count += adjacentPairCount(S, x, y);
             }
-            else if (S.Access(x, y) == "B")
+            else if (S.Read(x, y) == "B")
             {
-                if (G.Access(x, y) < 0) blue_penalty += 1;
-                else if (G.Access(x, y) > 0) blue_penalty -= 1;
+                if (G.Read(x, y) < 0) blue_penalty += 1;
+                else if (G.Read(x, y) > 0) blue_penalty -= 1;
             }
-            else if (S.Access(x, y) == "O") penalty_count += queenPairCount(S, x, y);
-            else if (S.Access(x,y) == "R") red_score += -G.Access(x, y);
+            else if (S.Read(x, y) == "O") penalty_count += queenPairCount(S, x, y);
+            else if (S.Read(x,y) == "R") red_score += -G.Read(x, y);
         }
     }
 

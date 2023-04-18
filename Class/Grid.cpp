@@ -9,7 +9,7 @@ Grid::Grid(int size, int penalty)
     this->penalty = penalty;
 }
 /* Acces the value in the (x, y) cell of the grid */
-int Grid::Access(int x, int y) const
+int Grid::Read(int x, int y) const
 {
     // return 0 if the requested value is outside of the grid
     if (x < 0 || y < 0 || x >= this->size || y >= this->size)
@@ -37,7 +37,7 @@ void Grid::Print()
     {
         for (int y = 0; y < this->size; y++)
         {
-            std::cout << this->Access(x, y) << "\t";
+            std::cout << this->Read(x, y) << "\t";
         }
         std::cout << "\n";
     }
@@ -51,7 +51,7 @@ Solution::Solution(int size)
     this->size = size;
 }
 /* Acces the color in the (x, y) cell of the solution */
-std::string Solution::Access(int x, int y) const
+std::string Solution::Read(int x, int y) const
 {
     // return an empty string if the requested color is outside of the solution
     if (x < 0 || y < 0 || x >= this->size || y >= this->size)
@@ -79,7 +79,7 @@ void Solution::Print()
     {
         for (int y = 0; y < this->size; y++)
         {
-            std::cout << this->Access(x, y) << "\t";
+            std::cout << this->Read(x, y) << "\t";
         }
         std::cout << "\n";
     }
