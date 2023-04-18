@@ -1,7 +1,7 @@
 #include "Functions.h"
-#include "Grid.h"
+#include "Class/Grid.h"
 
-/*Returns true if there is the same color on a surrounding cell*/
+/*Returns true if the same color is on a surrounding cell*/
 bool adjacent(Solution S, int x, int y)
 {
     if (S.Access(x, y) == S.Access(x - 1, y - 1) and S.Access(x - 1, y - 1)) return true;
