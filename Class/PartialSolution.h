@@ -20,7 +20,7 @@ public:
 
     bool IsCollapsed();
     int GetMaxScore();
-    void Collapse(PartialSolution& Solution);
+    void Collapse(PartialSolution* Solution);
 };
 
 class PartialSolution
