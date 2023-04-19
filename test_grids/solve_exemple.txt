@@ -1,3 +1,28 @@
+12
+V N V N N N V N V N V N 
+N B B O O B B O N B B O
+O B B B B B B B J B B B
+O B V N N B V N O B V N
+V N V N N N V N V N V N
+N B B O O B B O N B B O
+R B B B B B B B O B B B
+O B V N N B V N O B V N
+V N V N N N V N V N V N
+N B B O O B B O N B B O
+B B B B B B B B V B B B
+O B V N N B V N O B V N
+
+
+
+4
+V N V N
+N B B O
+R B B B
+O B V N
+
+score attendu:
+76
+
 4
 V J O N
 J V B O
