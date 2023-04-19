@@ -22,7 +22,7 @@ class PartialSolution
 {
 private:
     int size;
-    PartialSolutionCell* cells;
+    PartialSolutionCell** cells;
 public:
     PartialSolution(Grid G);
 
