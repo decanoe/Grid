@@ -14,13 +14,13 @@ private:
     char collapsedColor;
 public:
     PartialSolutionCell(Grid* G, int x, int y);
-    ~PartialSolutionCell();
+    PartialSolutionCell();
     
     void InitScores();
 
     bool IsCollapsed();
     int GetMaxScore();
-    void Collapse();
+    void Collapse(PartialSolution& Solution);
 };
 
 class PartialSolution
