@@ -1,5 +1,5 @@
-#include "Functions.h"
-#include "Class/Grid.h"
+#include "Compute.h"
+#include "../Class/Grid.h"
 #include <iostream>
 
 /*Returns true if the same color is on a surrounding cell*/

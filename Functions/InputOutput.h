@@ -1,4 +1,4 @@
-#include "Class/Grid.h"
+#include "../Class/Grid.h"
 #include <string>
 
 Grid ReadGrid(std::string filePath);

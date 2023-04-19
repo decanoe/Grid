@@ -1,5 +1,5 @@
 #pragma once
-#include "Class/Grid.h"
+#include "../Class/Grid.h"
 
 bool adjacent(Solution S, int x, int y);
 

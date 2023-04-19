@@ -1,5 +1,5 @@
-#include "Class/Grid.h"
-#include "Functions.h"
+#include "../Class/Grid.h"
+#include "Compute.h"
 #include <iostream>
 #include <fstream>
 #include <string>

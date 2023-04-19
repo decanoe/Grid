@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "InputOutput.h"
-#include "Functions.h"
+#include "Functions/InputOutput.h"
+#include "Functions/Compute.h"
 
 int main()
 {

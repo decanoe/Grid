@@ -12,14 +12,14 @@ project(Grid VERSION 0.1.0)
 
 set(SRCS
     main.cpp
-    Functions.cpp
-    InputOutput.cpp
+    Functions/Compute.cpp
+    Functions/InputOutput.cpp
     Class/Grid.cpp
     )
     
     set(HEADERS
-    Functions.h
-    InputOutput.h
+    Functions/Compute.h
+    Functions/InputOutput.h
     Class/Grid.h
     )
     
