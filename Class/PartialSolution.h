@@ -20,15 +20,16 @@ public:
 
     bool IsCollapsed();
     int GetMaxScore();
+    void RefreshMaxScore();
     void Collapse(PartialSolution* Solution);
 };
 
 class PartialSolution
 {
 private:
-    int size;
-    PartialSolutionCell** cells;
 public:
+    PartialSolutionCell** cells;
+    int size;
     PartialSolution(Grid G);
 
     void GetBestCell(int& x, int& y);

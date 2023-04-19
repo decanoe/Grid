@@ -1,5 +1,6 @@
 #include "PartialSolution.h"
 #include "Grid.h"
+#include <iostream>
 
 void PartialSolutionCell::InitScores()
 {
@@ -42,13 +43,26 @@ PartialSolutionCell::PartialSolutionCell(Grid* G, int x, int y)
 
 bool PartialSolutionCell::IsCollapsed()
 {
-    return this->collapsedColor == 'e';
+    return this->collapsedColor != 'e';
 }
 int PartialSolutionCell::GetMaxScore()
 {
     return this->maxScore;
 }
-void PartialSolutionCell::Collapse()
+void PartialSolutionCell::RefreshMaxScore()
+{
+    this->maxScore = this->scores[0];
+    if (this->maxScore < this->scores[1])
+        this->maxScore = this->scores[1];
+    if (this->maxScore < this->scores[2])
+        this->maxScore = this->scores[2];
+    if (this->maxScore < this->scores[3])
+        this->maxScore = this->scores[3];
+    if (this->maxScore < this->scores[4])
+        this->maxScore = this->scores[4];
+}
+
+void PartialSolutionCell::Collapse(PartialSolution* Solution)
 {
     int color = 0;
     for (int i = 1; i < 5; i++)
@@ -61,6 +75,15 @@ void PartialSolutionCell::Collapse()
     {
     case 0:
         this->collapsedColor = 'R';
+        for (int x = 0; x < Solution->size; x++)
+        for (int y = 0; y < Solution->size; y++)
+        {
+            if (!Solution->cells[x][y].IsCollapsed())
+            {
+                Solution->cells[x][y].scores[0] = -INT_MAX;
+                Solution->cells[x][y].RefreshMaxScore();
+            }
+        }
         break;
     case 1:
         this->collapsedColor = 'V';
