@@ -1,4 +1,5 @@
 #pragma once
+#include "Grid.h"
 
 class PartialSolution;
 
@@ -6,10 +7,11 @@ class PartialSolutionCell
 {
 private:
     int* scores;
+    int cellValue;
     int maxScore;
     char collapsedColor;
 public:
-    PartialSolutionCell(/* args */);
+    PartialSolutionCell();
     
     bool IsCollapsed();
     int GetMaxScore();
@@ -19,10 +21,11 @@ public:
 class PartialSolution
 {
 private:
+    int size;
     PartialSolutionCell* cells;
 public:
-    PartialSolution(/* args */);
+    PartialSolution(Grid G);
 
     void GetBestCell(int& x, int& y);
-    void Solve();
+    Solution Solve();
 };
