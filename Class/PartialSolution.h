@@ -14,6 +14,7 @@ private:
     char collapsedColor;
 public:
     PartialSolutionCell(Grid* G, int x, int y);
+    ~PartialSolutionCell();
     
     void InitScores();
 
