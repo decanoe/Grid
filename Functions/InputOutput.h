@@ -1,3 +1,4 @@
+#pragma once
 #include "../Class/Grid.h"
 #include <string>
 
