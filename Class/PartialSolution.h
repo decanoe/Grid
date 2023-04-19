@@ -6,16 +6,20 @@ class PartialSolution;
 class PartialSolutionCell
 {
 private:
+    Grid* grid;
+    int x, y;
+
     int* scores;
-    int cellValue;
     int maxScore;
     char collapsedColor;
 public:
-    PartialSolutionCell();
+    PartialSolutionCell(Grid* G, int x, int y);
     
+    void InitScores();
+
     bool IsCollapsed();
     int GetMaxScore();
-    void Collapse(PartialSolution Solution);
+    void Collapse();
 };
 
 class PartialSolution
