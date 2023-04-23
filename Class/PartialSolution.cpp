@@ -37,11 +37,17 @@ void PartialSolution::GetBestCell(int& x, int& y)
 Solution PartialSolution::Solve()
 {
     int x, y;
+    Solution S = Solution(this->size);
 
-    for (int i = 0; i < this->size; ++i)
-    for (int j = 0; j < this->size; ++j)
+    for (int i = 0; i < this->size*this->size; ++i)
     {
         this->GetBestCell(x, y);
         this->cells[x][y].Collapse(this);
     }
+
+    for (int i = 0; i < this->size; ++i)
+    for (int j = 0; j < this->size; ++j)
+        S.Access(i, j) = this->Read(i, j);
+
+    return S;
 }
