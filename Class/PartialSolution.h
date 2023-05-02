@@ -22,6 +22,12 @@ public:
     int GetMaxScore();
     void RefreshMaxScore();
     void Collapse(PartialSolution* Solution);
+
+    void Collapse_Red(PartialSolution* Solution);
+    void Collapse_Green(PartialSolution* Solution);
+    void Collapse_Yellow(PartialSolution* Solution);
+    void Collapse_Black(PartialSolution* Solution);
+    void Collapse_Orange(PartialSolution* Solution);
 };
 
 class PartialSolution

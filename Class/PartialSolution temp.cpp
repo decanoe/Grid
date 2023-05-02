@@ -62,6 +62,51 @@ void PartialSolutionCell::RefreshMaxScore()
         this->maxScore = this->scores[4];
 }
 
+void PartialSolutionCell::Collapse_Red(PartialSolution* Solution)
+{
+    this->collapsedColor = 'R';
+    
+    for (int x = 0; x < Solution->size; x++)
+    for (int y = 0; y < Solution->size; y++)
+    {
+        if (!Solution->cells[x][y].IsCollapsed())
+        {
+            Solution->cells[x][y].scores[0] = -INT_MAX;
+            Solution->cells[x][y].RefreshMaxScore();
+        }
+    }
+}
+void PartialSolutionCell::Collapse_Green(PartialSolution* Solution)
+{
+    this->collapsedColor = 'O';
+}
+void PartialSolutionCell::Collapse_Yellow(PartialSolution* Solution)
+{
+    this->collapsedColor = 'O';
+}
+void PartialSolutionCell::Collapse_Black(PartialSolution* Solution)
+{
+    this->collapsedColor = 'N';
+    Solution->blackCount += 1;
+
+    if (Solution->blackCount == Solution->size)
+    {
+        for (int x = 0; x < Solution->size; x++)
+        for (int y = 0; y < Solution->size; y++)
+        {
+            if (!Solution->cells[x][y].IsCollapsed())
+            {
+                Solution->cells[x][y].scores[3] /= 2;
+                Solution->cells[x][y].RefreshMaxScore();
+            }
+        }
+    }
+}
+void PartialSolutionCell::Collapse_Orange(PartialSolution* Solution)
+{
+    this->collapsedColor = 'O';
+}
+
 void PartialSolutionCell::Collapse(PartialSolution* Solution)
 {
     int color = 0;
@@ -78,42 +123,22 @@ void PartialSolutionCell::Collapse(PartialSolution* Solution)
     switch (color)
     {
     case 0:
-        this->collapsedColor = 'R';
-        
-        for (int x = 0; x < Solution->size; x++)
-        for (int y = 0; y < Solution->size; y++)
-        {
-            if (!Solution->cells[x][y].IsCollapsed())
-            {
-                Solution->cells[x][y].scores[0] = -INT_MAX;
-                Solution->cells[x][y].RefreshMaxScore();
-            }
-        }
+        Collapse_Red(Solution);
         break;
     case 1:
-        this->collapsedColor = 'V';
+        Collapse_Green(Solution);
         break;
+
     case 2:
-        this->collapsedColor = 'J';
+        Collapse_Yellow(Solution);
         break;
+
     case 3:
-        this->collapsedColor = 'N';
-        Solution->blackCount += 1;
-
-        if (Solution->blackCount < Solution->size) break;
-
-        for (int x = 0; x < Solution->size; x++)
-        for (int y = 0; y < Solution->size; y++)
-        {
-            if (!Solution->cells[x][y].IsCollapsed())
-            {
-                Solution->cells[x][y].scores[3] /= 2;
-                Solution->cells[x][y].RefreshMaxScore();
-            }
-        }
+        Collapse_Black(Solution);
         break;
+
     case 4:
-        this->collapsedColor = 'O';
+        Collapse_Orange(Solution);
         break;
     
     default:
