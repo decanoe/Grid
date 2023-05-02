@@ -11,8 +11,9 @@ private:
 
     int* scores;
     int maxScore;
-    char collapsedColor;
 public:
+    char collapsedColor;
+    
     PartialSolutionCell(Grid* G, int x, int y);
     PartialSolutionCell();
     

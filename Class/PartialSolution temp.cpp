@@ -140,6 +140,65 @@ void PartialSolutionCell::Collapse_Orange(PartialSolution* Solution)
 {
     this->collapsedColor = 'O';
 
+    for (int i = 0; i < Solution->size; i++)
+    {
+        // vertical
+        if (Solution->IsPosInGrid(xPos, i))
+        {
+            if (!Solution->cells[xPos][i].IsCollapsed())
+            {
+                Solution->cells[xPos][i].scores[4] -= this->grid->penalty;
+                Solution->cells[xPos][i].RefreshMaxScore();
+            }
+        }
+
+        // horizontal
+        if (Solution->IsPosInGrid(i, yPos))
+        {
+            if (!Solution->cells[i][yPos].IsCollapsed())
+            {
+                Solution->cells[i][yPos].scores[4] -= this->grid->penalty;
+                Solution->cells[i][yPos].RefreshMaxScore();
+            }
+        }
+
+        // Diagonal up right
+        if (Solution->IsPosInGrid(xPos + i, yPos + i))
+        {
+            if (!Solution->cells[xPos + i][yPos + i].IsCollapsed())
+            {
+                Solution->cells[xPos + i][yPos + i].scores[4] -= this->grid->penalty;
+                Solution->cells[xPos + i][yPos + i].RefreshMaxScore();
+            }
+        }
+        // Diagonal up left
+        if (Solution->IsPosInGrid(xPos - i, yPos + i))
+        {
+            if (!Solution->cells[xPos - i][yPos + i].IsCollapsed())
+            {
+                Solution->cells[xPos - i][yPos + i].scores[4] -= this->grid->penalty;
+                Solution->cells[xPos - i][yPos + i].RefreshMaxScore();
+            }
+        }
+        // Diagonal down right
+        if (Solution->IsPosInGrid(xPos + i, yPos - i))
+        {
+            if (!Solution->cells[xPos + i][yPos - i].IsCollapsed())
+            {
+                Solution->cells[xPos + i][yPos - i].scores[4] -= this->grid->penalty;
+                Solution->cells[xPos + i][yPos - i].RefreshMaxScore();
+            }
+        }
+        // Diagonal down left
+        if (Solution->IsPosInGrid(xPos - i, yPos - i))
+        {
+            if (!Solution->cells[xPos - i][yPos - i].IsCollapsed())
+            {
+                Solution->cells[xPos - i][yPos - i].scores[4] -= this->grid->penalty;
+                Solution->cells[xPos - i][yPos - i].RefreshMaxScore();
+            }
+        }
+    }
 }
 
 void PartialSolutionCell::Collapse(PartialSolution* Solution)
@@ -151,7 +210,7 @@ void PartialSolutionCell::Collapse(PartialSolution* Solution)
             color = i;
     }
 
-    Solution->negative_positive_diff += 
+    Solution->negative_positive_diff -= 
         (this->grid->Read(this->xPos, this->yPos) > 0) ? -1 :
         (this->grid->Read(this->xPos, this->yPos) < 0) ? 1 : 0;
     
