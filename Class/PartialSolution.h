@@ -13,15 +13,15 @@ private:
     int maxScore;
 public:
     char collapsedColor;
-    
+
     PartialSolutionCell(Grid* G, int x, int y);
     PartialSolutionCell();
     
-    void InitScores();
+    void InitScores(int negative_positive_diff);
 
     bool IsCollapsed();
     int GetMaxScore();
-    void RefreshMaxScore();
+    void RefreshMaxScore(int negative_positive_diff);
     void Collapse(PartialSolution* Solution);
 
     void Collapse_Red(PartialSolution* Solution);
@@ -46,4 +46,6 @@ public:
     int ComputeBlue();
     int GetBestCell(int& x, int& y);
     Solution Solve();
+
+    void Print();
 };

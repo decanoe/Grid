@@ -1,4 +1,5 @@
 #include "PartialSolution.h"
+#include "../Functions/Compute.h"
 #include "Grid.h"
 #include <iostream>
 
@@ -12,7 +13,7 @@ int PartialSolution::ComputeBlue()
     return this->negative_positive_diff * this->penalty;
 }
 
-void PartialSolutionCell::InitScores()
+void PartialSolutionCell::InitScores(int negative_positive_diff)
 {
     //================= Red ==========================
     this->maxScore = -this->grid->Read(xPos, yPos);
@@ -25,7 +26,7 @@ void PartialSolutionCell::InitScores()
         this->maxScore = this->scores[1];
 
     //================= Yellow =======================
-    this->scores[2] = grid->Read(xPos, yPos);
+    this->scores[2] = grid->Read(xPos, yPos) - grid->penalty;
     if (this->maxScore < this->scores[2])
         this->maxScore = this->scores[2];
 
@@ -35,9 +36,12 @@ void PartialSolutionCell::InitScores()
         this->maxScore = this->scores[3];
     
     //================= Orange =======================
-    this->scores[3] = 0;
+    this->scores[4] = 0;
     if (this->maxScore < this->scores[4])
         this->maxScore = this->scores[4];
+    
+    
+    RefreshMaxScore(negative_positive_diff);
 }
 
 PartialSolutionCell::PartialSolutionCell() {}
@@ -48,18 +52,18 @@ PartialSolutionCell::PartialSolutionCell(Grid* G, int x, int y)
     this->yPos = y;
 
     this->scores = new int[5];
-    this->collapsedColor = 'e';
+    this->collapsedColor = 'B';
 }
 
 bool PartialSolutionCell::IsCollapsed()
 {
-    return this->collapsedColor != 'e';
+    return this->collapsedColor != 'B';
 }
 int PartialSolutionCell::GetMaxScore()
 {
     return this->maxScore;
 }
-void PartialSolutionCell::RefreshMaxScore()
+void PartialSolutionCell::RefreshMaxScore(int negative_positive_diff)
 {
     this->maxScore = this->scores[0];
     if (this->maxScore < this->scores[1])
@@ -70,6 +74,23 @@ void PartialSolutionCell::RefreshMaxScore()
         this->maxScore = this->scores[3];
     if (this->maxScore < this->scores[4])
         this->maxScore = this->scores[4];
+    
+    
+    int positive_negative_penality = 0;
+    if (this->grid->Read(xPos, yPos) < 0)
+    {
+        if (negative_positive_diff < 0)
+            positive_negative_penality = -this->grid->penalty;
+        else if (negative_positive_diff > 0)
+            positive_negative_penality = this->grid->penalty;
+    }
+    else if (this->grid->Read(xPos, yPos) == 0)
+    {
+        if (negative_positive_diff < 0)
+            positive_negative_penality = -this->grid->penalty;
+    }
+
+    this->maxScore += positive_negative_penality;
 }
 
 void PartialSolutionCell::Collapse_Red(PartialSolution* Solution)
@@ -82,7 +103,7 @@ void PartialSolutionCell::Collapse_Red(PartialSolution* Solution)
         if (!Solution->cells[x][y].IsCollapsed())
         {
             Solution->cells[x][y].scores[0] = -2048;
-            Solution->cells[x][y].RefreshMaxScore();
+            Solution->cells[x][y].RefreshMaxScore(Solution->negative_positive_diff);
         }
     }
 }
@@ -98,7 +119,7 @@ void PartialSolutionCell::Collapse_Green(PartialSolution* Solution)
         if (!Solution->cells[xPos + x][yPos + y].IsCollapsed() && x != 0 && y != 0)
         {
             Solution->cells[xPos + x][yPos + y].scores[1] -= this->grid->penalty;
-            Solution->cells[xPos + x][yPos + y].RefreshMaxScore();
+            Solution->cells[xPos + x][yPos + y].RefreshMaxScore(Solution->negative_positive_diff);
         }
     }
 }
@@ -114,11 +135,10 @@ void PartialSolutionCell::Collapse_Yellow(PartialSolution* Solution)
         if (!Solution->cells[xPos + x][yPos + y].IsCollapsed() && x != 0 && y != 0)
         {
             Solution->cells[xPos + x][yPos + y].scores[2] = this->grid->Read(xPos + x, yPos + y);
-            Solution->cells[xPos + x][yPos + y].RefreshMaxScore();
+            Solution->cells[xPos + x][yPos + y].RefreshMaxScore(Solution->negative_positive_diff);
         }
     }
 }
-
 void PartialSolutionCell::Collapse_Black(PartialSolution* Solution)
 {
     this->collapsedColor = 'N';
@@ -126,13 +146,24 @@ void PartialSolutionCell::Collapse_Black(PartialSolution* Solution)
 
     if (Solution->blackCount == Solution->size)
     {
+        int blackSum = 0; // the sum of all black already placed on the grid
+        for (int x = 0; x < Solution->size; x++)
+        for (int y = 0; y < Solution->size; y++)
+        {
+            if (Solution->cells[x][y].collapsedColor == 'N')
+            {
+                blackSum += grid->Read(x, y) - 1;
+            }
+        }
+
         for (int x = 0; x < Solution->size; x++)
         for (int y = 0; y < Solution->size; y++)
         {
             if (!Solution->cells[x][y].IsCollapsed())
             {
                 Solution->cells[x][y].scores[3] /= 2;
-                Solution->cells[x][y].RefreshMaxScore();
+                Solution->cells[x][y].scores[3] -= blackSum;
+                Solution->cells[x][y].RefreshMaxScore(Solution->negative_positive_diff);
             }
         }
     }
@@ -144,23 +175,17 @@ void PartialSolutionCell::Collapse_Orange(PartialSolution* Solution)
     for (int i = 0; i < Solution->size; i++)
     {
         // vertical
-        if (Solution->IsPosInGrid(xPos, i))
+        if (!Solution->cells[xPos][i].IsCollapsed())
         {
-            if (!Solution->cells[xPos][i].IsCollapsed())
-            {
-                Solution->cells[xPos][i].scores[4] -= this->grid->penalty;
-                Solution->cells[xPos][i].RefreshMaxScore();
-            }
+            Solution->cells[xPos][i].scores[4] -= this->grid->penalty;
+            Solution->cells[xPos][i].RefreshMaxScore(Solution->negative_positive_diff);
         }
 
         // horizontal
-        if (Solution->IsPosInGrid(i, yPos))
+        if (!Solution->cells[i][yPos].IsCollapsed())
         {
-            if (!Solution->cells[i][yPos].IsCollapsed())
-            {
-                Solution->cells[i][yPos].scores[4] -= this->grid->penalty;
-                Solution->cells[i][yPos].RefreshMaxScore();
-            }
+            Solution->cells[i][yPos].scores[4] -= this->grid->penalty;
+            Solution->cells[i][yPos].RefreshMaxScore(Solution->negative_positive_diff);
         }
 
         // Diagonal up right
@@ -169,7 +194,7 @@ void PartialSolutionCell::Collapse_Orange(PartialSolution* Solution)
             if (!Solution->cells[xPos + i][yPos + i].IsCollapsed())
             {
                 Solution->cells[xPos + i][yPos + i].scores[4] -= this->grid->penalty;
-                Solution->cells[xPos + i][yPos + i].RefreshMaxScore();
+                Solution->cells[xPos + i][yPos + i].RefreshMaxScore(Solution->negative_positive_diff);
             }
         }
         // Diagonal up left
@@ -178,7 +203,7 @@ void PartialSolutionCell::Collapse_Orange(PartialSolution* Solution)
             if (!Solution->cells[xPos - i][yPos + i].IsCollapsed())
             {
                 Solution->cells[xPos - i][yPos + i].scores[4] -= this->grid->penalty;
-                Solution->cells[xPos - i][yPos + i].RefreshMaxScore();
+                Solution->cells[xPos - i][yPos + i].RefreshMaxScore(Solution->negative_positive_diff);
             }
         }
         // Diagonal down right
@@ -187,7 +212,7 @@ void PartialSolutionCell::Collapse_Orange(PartialSolution* Solution)
             if (!Solution->cells[xPos + i][yPos - i].IsCollapsed())
             {
                 Solution->cells[xPos + i][yPos - i].scores[4] -= this->grid->penalty;
-                Solution->cells[xPos + i][yPos - i].RefreshMaxScore();
+                Solution->cells[xPos + i][yPos - i].RefreshMaxScore(Solution->negative_positive_diff);
             }
         }
         // Diagonal down left
@@ -196,7 +221,7 @@ void PartialSolutionCell::Collapse_Orange(PartialSolution* Solution)
             if (!Solution->cells[xPos - i][yPos - i].IsCollapsed())
             {
                 Solution->cells[xPos - i][yPos - i].scores[4] -= this->grid->penalty;
-                Solution->cells[xPos - i][yPos - i].RefreshMaxScore();
+                Solution->cells[xPos - i][yPos - i].RefreshMaxScore(Solution->negative_positive_diff);
             }
         }
     }
@@ -243,6 +268,9 @@ void PartialSolutionCell::Collapse(PartialSolution* Solution)
     delete[] scores;
 }
 
+
+
+
 PartialSolution::PartialSolution(Grid G)
 {
     this->size = G.size;
@@ -257,17 +285,23 @@ PartialSolution::PartialSolution(Grid G)
         for (int j = 0; j < G.size; ++j)
         {
             this->cells[i][j] = PartialSolutionCell(&G, i, j);
-            this->cells[i][j].InitScores();
+
             if (G.Read(i, j) > 0) negative_positive_diff -= 1;
             else if (G.Read(i, j) < 0) negative_positive_diff += 1;
         }
+    }
+
+    for (int i = 0; i < G.size; ++i)
+    for (int j = 0; j < G.size; ++j)
+    {
+        this->cells[i][j].InitScores(negative_positive_diff);
     }
 }
 
 int PartialSolution::GetBestCell(int& x, int& y)
 {
-    int x = -1;
-    int y = -1;
+    x = -1;
+    y = -1;
     int max = 0;
 
     for (int i = 0; i < this->size; ++i)
@@ -284,22 +318,40 @@ int PartialSolution::GetBestCell(int& x, int& y)
 
     return max;
 }
-
 Solution PartialSolution::Solve()
 {
     int x, y;
-    Solution S = Solution(this->size);
 
     for (int i = 0; i < this->size*this->size; ++i)
     {
-        if (this->GetBestCell(x, y) > this->ComputeBlue()) 
+        if (this->GetBestCell(x, y) > this->ComputeBlue())
+        {
+            if (x == -1) break;
             this->cells[x][y].Collapse(this);
+        }
         else break;
+
+        this->Print();
+        std::cout << "\n";
     }
 
+    Solution S = Solution(this->size);
     for (int i = 0; i < this->size; ++i)
     for (int j = 0; j < this->size; ++j)
         S.Access(i, j) = this->cells[i][j].collapsedColor;
-
+    
     return S;
+}
+
+// show the Solution in the terminal
+void PartialSolution::Print()
+{
+    for (int x = 0; x < this->size; x++)
+    {
+        for (int y = 0; y < this->size; y++)
+        {
+            std::cout << this->cells[x][y].collapsedColor << "\t";
+        }
+        std::cout << "\n";
+    }
 }
