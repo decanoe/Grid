@@ -6,11 +6,11 @@ class PartialSolution;
 class PartialSolutionCell
 {
 private:
-    Grid* grid;
     int xPos, yPos;
 
     int maxScore;
 public:
+    Grid* grid;
     int* scores;
     char collapsedColor;
 
@@ -22,6 +22,7 @@ public:
 
     bool IsCollapsed();
     int GetMaxScore();
+    int GetBestColor();
     void RefreshMaxScore(int negative_positive_diff);
     void Collapse(PartialSolution* Solution);
 
@@ -41,7 +42,7 @@ public:
     int penalty;
     int negative_positive_diff;
     int blackCount;
-    PartialSolution(Grid G);
+    PartialSolution(Grid* G);
 
     bool IsPosInGrid(int x, int y);
     int ComputeBlue();
