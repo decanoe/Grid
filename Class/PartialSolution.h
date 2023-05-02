@@ -7,7 +7,7 @@ class PartialSolutionCell
 {
 private:
     Grid* grid;
-    int x, y;
+    int xPos, yPos;
 
     int* scores;
     int maxScore;
@@ -36,10 +36,13 @@ private:
 public:
     PartialSolutionCell** cells;
     int size;
+    int penalty;
     int negative_positive_diff;
     int blackCount;
     PartialSolution(Grid G);
 
+    bool IsPosInGrid(int x, int y);
+    int ComputeBlue();
     void GetBestCell(int& x, int& y);
     Solution Solve();
 };
