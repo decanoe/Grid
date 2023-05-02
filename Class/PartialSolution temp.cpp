@@ -70,11 +70,16 @@ void PartialSolutionCell::Collapse(PartialSolution* Solution)
         if (this->scores[i] > this->scores[color])
             color = i;
     }
+
+    Solution->negative_positive_diff += 
+        (this->grid->Read(this->x, this->y) > 0) ? -1 :
+        (this->grid->Read(this->x, this->y) < 0) ? 1 : 0;
     
     switch (color)
     {
     case 0:
         this->collapsedColor = 'R';
+        
         for (int x = 0; x < Solution->size; x++)
         for (int y = 0; y < Solution->size; y++)
         {
@@ -93,6 +98,19 @@ void PartialSolutionCell::Collapse(PartialSolution* Solution)
         break;
     case 3:
         this->collapsedColor = 'N';
+        Solution->blackCount += 1;
+
+        if (Solution->blackCount < Solution->size) break;
+
+        for (int x = 0; x < Solution->size; x++)
+        for (int y = 0; y < Solution->size; y++)
+        {
+            if (!Solution->cells[x][y].IsCollapsed())
+            {
+                Solution->cells[x][y].scores[3] /= 2;
+                Solution->cells[x][y].RefreshMaxScore();
+            }
+        }
         break;
     case 4:
         this->collapsedColor = 'O';

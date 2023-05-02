@@ -30,6 +30,8 @@ private:
 public:
     PartialSolutionCell** cells;
     int size;
+    int negative_positive_diff;
+    int blackCount;
     PartialSolution(Grid G);
 
     void GetBestCell(int& x, int& y);
