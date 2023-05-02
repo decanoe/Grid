@@ -9,15 +9,16 @@ private:
     Grid* grid;
     int xPos, yPos;
 
-    int* scores;
     int maxScore;
 public:
+    int* scores;
     char collapsedColor;
 
     PartialSolutionCell(Grid* G, int x, int y);
     PartialSolutionCell();
     
     void InitScores(int negative_positive_diff);
+    void Delete();
 
     bool IsCollapsed();
     int GetMaxScore();
@@ -48,4 +49,5 @@ public:
     Solution Solve();
 
     void Print();
+    void Delete();
 };

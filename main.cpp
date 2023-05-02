@@ -22,5 +22,7 @@ int main()
     S.Print();
     std::cout << computeScore(G, S);
 
+    PS.Delete();
+
     return 0;
 }

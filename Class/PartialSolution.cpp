@@ -77,16 +77,16 @@ void PartialSolutionCell::RefreshMaxScore(int negative_positive_diff)
     
     
     int positive_negative_penality = 0;
-    if (this->grid->Read(xPos, yPos) < 0)
+    if (negative_positive_diff < 0)
     {
-        if (negative_positive_diff < 0)
+        if (this->grid->Read(xPos, yPos) < 0)
             positive_negative_penality = -this->grid->penalty;
-        else if (negative_positive_diff > 0)
+        else if (this->grid->Read(xPos, yPos) > 0)
             positive_negative_penality = this->grid->penalty;
     }
-    else if (this->grid->Read(xPos, yPos) == 0)
+    else if (negative_positive_diff == 0)
     {
-        if (negative_positive_diff < 0)
+        if (this->grid->Read(xPos, yPos) < 0)
             positive_negative_penality = -this->grid->penalty;
     }
 
@@ -155,6 +155,7 @@ void PartialSolutionCell::Collapse_Black(PartialSolution* Solution)
                 blackSum += grid->Read(x, y) - 1;
             }
         }
+        std::cout << blackSum;
 
         for (int x = 0; x < Solution->size; x++)
         for (int y = 0; y < Solution->size; y++)
@@ -229,22 +230,24 @@ void PartialSolutionCell::Collapse_Orange(PartialSolution* Solution)
 
 void PartialSolutionCell::Collapse(PartialSolution* Solution)
 {
+    if (this->grid->Read(this->xPos, this->yPos) > 0)
+        Solution->negative_positive_diff += 1;
+    else if (this->grid->Read(this->xPos, this->yPos) < 0)
+        Solution->negative_positive_diff -= 1;
+    
     int color = 0;
     for (int i = 1; i < 5; i++)
     {
         if (this->scores[i] > this->scores[color])
             color = i;
     }
-
-    Solution->negative_positive_diff -= 
-        (this->grid->Read(this->xPos, this->yPos) > 0) ? -1 :
-        (this->grid->Read(this->xPos, this->yPos) < 0) ? 1 : 0;
     
     switch (color)
     {
     case 0:
         Collapse_Red(Solution);
         break;
+
     case 1:
         Collapse_Green(Solution);
         break;
@@ -322,6 +325,8 @@ Solution PartialSolution::Solve()
 {
     int x, y;
 
+    this->Print();
+
     for (int i = 0; i < this->size*this->size; ++i)
     {
         if (this->GetBestCell(x, y) > this->ComputeBlue())
@@ -339,7 +344,7 @@ Solution PartialSolution::Solve()
     for (int i = 0; i < this->size; ++i)
     for (int j = 0; j < this->size; ++j)
         S.Access(i, j) = this->cells[i][j].collapsedColor;
-    
+
     return S;
 }
 
@@ -350,8 +355,29 @@ void PartialSolution::Print()
     {
         for (int y = 0; y < this->size; y++)
         {
-            std::cout << this->cells[x][y].collapsedColor << "\t";
+            if (this->cells[x][y].IsCollapsed())
+                std::cout << this->cells[x][y].collapsedColor << "\t";
+            else
+                std::cout << this->cells[x][y].scores[3] << "\t";
         }
         std::cout << "\n";
     }
+}
+
+void PartialSolutionCell::Delete()
+{
+    delete[] this->scores;
+}
+void PartialSolution::Delete()
+{
+    for (int x = 0; x < this->size; x++)
+    {
+        for (int y = 0; y < this->size; y++)
+        {
+            if (this->cells[x][y].IsCollapsed())
+                this->cells[x][y].Delete();
+        }
+        delete[] this->cells[x];
+    }
+    delete[] this->cells;
 }

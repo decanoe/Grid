@@ -26,3 +26,4 @@ set(SRCS
     )
     
 add_executable(Grid ${SRCS} ${HEADERS})
+add_compile_options(-Wall)
