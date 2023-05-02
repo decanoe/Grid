@@ -9,8 +9,8 @@ bool PartialSolution::IsPosInGrid(int x, int y)
 }
 int PartialSolution::ComputeBlue()
 {
-    if (this->negative_positive_diff >= 0) return 0;
-    return this->negative_positive_diff * this->penalty;
+    if (this->negative_positive_diff <= 0) return 0;
+    return -this->negative_positive_diff * this->penalty;
 }
 
 void PartialSolutionCell::InitScores(int negative_positive_diff)
@@ -77,17 +77,17 @@ void PartialSolutionCell::RefreshMaxScore(int negative_positive_diff)
     
     
     int positive_negative_penality = 0;
-    if (negative_positive_diff < 0)
+    if (negative_positive_diff > 0)
     {
         if (this->grid->Read(xPos, yPos) < 0)
-            positive_negative_penality = -this->grid->penalty;
-        else if (this->grid->Read(xPos, yPos) > 0)
             positive_negative_penality = this->grid->penalty;
+        else if (this->grid->Read(xPos, yPos) > 0)
+            positive_negative_penality = -this->grid->penalty;
     }
     else if (negative_positive_diff == 0)
     {
-        if (this->grid->Read(xPos, yPos) < 0)
-            positive_negative_penality = -this->grid->penalty;
+        if (this->grid->Read(xPos, yPos) > 0)
+            positive_negative_penality -= this->grid->penalty;
     }
 
     this->maxScore += positive_negative_penality;
@@ -228,12 +228,18 @@ void PartialSolutionCell::Collapse_Orange(PartialSolution* Solution)
     }
 }
 
+
+/////////////////////////////////////////////
 void PartialSolutionCell::Collapse(PartialSolution* Solution)
 {
     if (this->grid->Read(this->xPos, this->yPos) > 0)
+    {
         Solution->negative_positive_diff += 1;
+    }
     else if (this->grid->Read(this->xPos, this->yPos) < 0)
+    {
         Solution->negative_positive_diff -= 1;
+    }
     
     int color = 0;
     for (int i = 1; i < 5; i++)
@@ -329,6 +335,7 @@ Solution PartialSolution::Solve()
 
     for (int i = 0; i < this->size*this->size; ++i)
     {
+        std::cout << "diff : " << negative_positive_diff << "\n";
         if (this->GetBestCell(x, y) > this->ComputeBlue())
         {
             if (x == -1) break;
@@ -336,8 +343,8 @@ Solution PartialSolution::Solve()
         }
         else break;
 
-        this->Print();
         std::cout << "\n";
+        this->Print();
     }
 
     Solution S = Solution(this->size);
@@ -358,7 +365,7 @@ void PartialSolution::Print()
             if (this->cells[x][y].IsCollapsed())
                 std::cout << this->cells[x][y].collapsedColor << "\t";
             else
-                std::cout << this->cells[x][y].scores[3] << "\t";
+                std::cout << this->cells[x][y].GetMaxScore() << "\t";
         }
         std::cout << "\n";
     }
