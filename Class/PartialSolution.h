@@ -44,6 +44,6 @@ public:
 
     bool IsPosInGrid(int x, int y);
     int ComputeBlue();
-    void GetBestCell(int& x, int& y);
+    int GetBestCell(int& x, int& y);
     Solution Solve();
 };
