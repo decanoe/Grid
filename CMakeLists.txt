@@ -15,12 +15,14 @@ set(SRCS
     Functions/Compute.cpp
     Functions/InputOutput.cpp
     Class/Grid.cpp
+    Class/PartialSolution.cpp
     )
     
     set(HEADERS
     Functions/Compute.h
     Functions/InputOutput.h
     Class/Grid.h
+    Class/PartialSolution.h
     )
     
 add_executable(Grid ${SRCS} ${HEADERS})
