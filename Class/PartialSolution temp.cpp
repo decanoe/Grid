@@ -48,12 +48,12 @@ PartialSolutionCell::PartialSolutionCell(Grid* G, int x, int y)
     this->yPos = y;
 
     this->scores = new int[5];
-    this->collapsedColor = 'e';
+    this->collapsedColor = 'B';
 }
 
 bool PartialSolutionCell::IsCollapsed()
 {
-    return this->collapsedColor != 'e';
+    return this->collapsedColor != 'B';
 }
 int PartialSolutionCell::GetMaxScore()
 {
