@@ -36,7 +36,7 @@ void PartialSolutionCell::InitScores(int negative_positive_diff)
         this->maxScore = this->scores[3];
     
     //================= Orange =======================
-    this->scores[4] = 1 - ((float)GetOrangeInWay() / (grid->size * grid->size));
+    this->scores[4] = 1 - ((float)GetOrangeInWay() / (grid->size * grid->size + 2));
     if (this->maxScore < this->scores[4])
         this->maxScore = this->scores[4];
     
@@ -262,23 +262,15 @@ void PartialSolutionCell::ChangeNearbyOrange(PartialSolution* Solution)
         // vertical
         if (!Solution->cells[xPos][i].IsCollapsed())
         {
-            std::cout << "change from " << Solution->cells[xPos][i].scores[4];
-
-            Solution->cells[xPos][i].scores[4] += 1. / (grid->size * grid->size);
+            Solution->cells[xPos][i].scores[4] += 1. / (grid->size * grid->size + 2);
             Solution->cells[xPos][i].RefreshMaxScore(Solution->negative_positive_diff);
-
-            std::cout << " to " << Solution->cells[xPos][i].scores[4] << "\n";
         }
 
         // horizontal
         if (!Solution->cells[i][yPos].IsCollapsed())
         {
-            std::cout << "change from " << Solution->cells[i][yPos].scores[4];
-            
-            Solution->cells[i][yPos].scores[4] += 1. / (grid->size * grid->size);
+            Solution->cells[i][yPos].scores[4] += 1. / (grid->size * grid->size + 2);
             Solution->cells[i][yPos].RefreshMaxScore(Solution->negative_positive_diff);
-
-            std::cout << " to " << Solution->cells[i][yPos].scores[4] << "\n";
         }
 
         // Diagonal up right
@@ -286,12 +278,8 @@ void PartialSolutionCell::ChangeNearbyOrange(PartialSolution* Solution)
         {
             if (!Solution->cells[xPos + i][yPos + i].IsCollapsed())
             {
-                std::cout << "change from " << Solution->cells[xPos + i][yPos + i].scores[4];
-            
-                Solution->cells[xPos + i][yPos + i].scores[4] += 1. / (grid->size * grid->size);
+                Solution->cells[xPos + i][yPos + i].scores[4] += 1. / (grid->size * grid->size + 2);
                 Solution->cells[xPos + i][yPos + i].RefreshMaxScore(Solution->negative_positive_diff);
-
-                std::cout << " to " << Solution->cells[xPos + i][yPos + i].scores[4] << "\n";
             }
         }
         // Diagonal up left
@@ -299,12 +287,8 @@ void PartialSolutionCell::ChangeNearbyOrange(PartialSolution* Solution)
         {
             if (!Solution->cells[xPos - i][yPos + i].IsCollapsed())
             {
-                std::cout << "change from " << Solution->cells[xPos - i][yPos + i].scores[4];
-            
-                Solution->cells[xPos - i][yPos + i].scores[4] += 1. / (grid->size * grid->size);
+                Solution->cells[xPos - i][yPos + i].scores[4] += 1. / (grid->size * grid->size + 2);
                 Solution->cells[xPos - i][yPos + i].RefreshMaxScore(Solution->negative_positive_diff);
-
-                std::cout << " to " << Solution->cells[xPos - i][yPos + i].scores[4] << "\n";
             }
         }
         // Diagonal down right
@@ -312,12 +296,8 @@ void PartialSolutionCell::ChangeNearbyOrange(PartialSolution* Solution)
         {
             if (!Solution->cells[xPos + i][yPos - i].IsCollapsed())
             {
-                std::cout << "change from " << Solution->cells[xPos + i][yPos - i].scores[4];
-            
-                Solution->cells[xPos + i][yPos - i].scores[4] += 1. / (grid->size * grid->size);
+                Solution->cells[xPos + i][yPos - i].scores[4] += 1. / (grid->size * grid->size + 2);
                 Solution->cells[xPos + i][yPos - i].RefreshMaxScore(Solution->negative_positive_diff);
-
-                std::cout << " to " << Solution->cells[xPos + i][yPos - i].scores[4] << "\n";
             }
         }
         // Diagonal down left
@@ -325,12 +305,8 @@ void PartialSolutionCell::ChangeNearbyOrange(PartialSolution* Solution)
         {
             if (!Solution->cells[xPos - i][yPos - i].IsCollapsed())
             {
-                std::cout << "change from " << Solution->cells[xPos - i][yPos - i].scores[4];
-            
-                Solution->cells[xPos - i][yPos - i].scores[4] += 1. / (grid->size * grid->size);
+                Solution->cells[xPos - i][yPos - i].scores[4] += 1. / (grid->size * grid->size + 2);
                 Solution->cells[xPos - i][yPos - i].RefreshMaxScore(Solution->negative_positive_diff);
-
-                std::cout << " to " << Solution->cells[xPos - i][yPos - i].scores[4] << "\n";
             }
         }
     }
@@ -348,6 +324,16 @@ void PartialSolutionCell::Collapse(PartialSolution* Solution)
     {
         std::cout << "negative removed (" << this->grid->Read(this->xPos, this->yPos) << ") at " << xPos << " " << yPos << "\n";
         Solution->negative_positive_diff -= 1;
+    }
+    if (Solution->negative_positive_diff > -2)
+    {
+        // refresh to count blue count change
+        for (int x = 0; x < Solution->size; x++)
+        for (int y = 0; y < Solution->size; y++)
+        {
+            if (!Solution->cells[x][y].IsCollapsed())
+                Solution->cells[x][y].RefreshMaxScore(Solution->negative_positive_diff);
+        }
     }
     
     switch (GetBestColor())
@@ -376,8 +362,8 @@ void PartialSolutionCell::Collapse(PartialSolution* Solution)
         break;
     }
 
-    Solution->Print();
     ChangeNearbyOrange(Solution);
+
     delete[] scores;
 }
 
@@ -440,13 +426,13 @@ Solution PartialSolution::Solve()
     for (int i = 0; i < this->size*this->size; ++i)
     {
         std::cout << "diff : " << negative_positive_diff << "\n";
-        // if (this->GetBestCell(x, y) > this->ComputeBlue())
-        //     this->cells[x][y].Collapse(this);
-        // else break;
-        int value = this->GetBestCell(x, y);
-        std::cout << "\nbest : " << x << " " << y << " : ";
-        std::cin >> x >> y;
-        this->cells[x][y].Collapse(this);
+        if (this->GetBestCell(x, y) > this->ComputeBlue())
+            this->cells[x][y].Collapse(this);
+        else break;
+        // int value = this->GetBestCell(x, y);
+        // std::cout << "\nbest : " << x << " " << y << " : ";
+        // std::cin >> x >> y;
+        // this->cells[x][y].Collapse(this);
         this->Print();
     }
 
@@ -496,19 +482,19 @@ void PartialSolution::Print()
                 switch (this->cells[x][y].GetBestColor())
                 {
                 case 0: // red
-                    std::cout << "\033[31m " << value << " \033[0m\t";
+                    std::cout << "\033[31m" << value << "\033[0m\t";
                     break;
                 case 1: // green
-                    std::cout << "\033[32m " << value << " \033[0m\t";
+                    std::cout << "\033[32m" << value << "\033[0m\t";
                     break;
                 case 2: // yellow
-                    std::cout << "\033[33m " << value << " \033[0m\t";
+                    std::cout << "\033[33m" << value << "\033[0m\t";
                     break;
                 case 3: // black
-                    std::cout << "\033[30m " << value << " \033[0m\t";
+                    std::cout << "\033[30m" << value << "\033[0m\t";
                     break;
                 case 4: // orange
-                    std::cout << "\033[35m " << value << " \033[0m\t";
+                    std::cout << "\033[35m" << value << "\033[0m\t";
                     break;
                 
                 default:
