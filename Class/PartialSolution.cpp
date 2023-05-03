@@ -36,12 +36,30 @@ void PartialSolutionCell::InitScores(int negative_positive_diff)
         this->maxScore = this->scores[3];
     
     //================= Orange =======================
-    this->scores[4] = 0;
+    this->scores[4] = 1 - ((float)GetOrangeInWay() / (grid->size * grid->size));
     if (this->maxScore < this->scores[4])
         this->maxScore = this->scores[4];
     
     
     RefreshMaxScore(negative_positive_diff);
+}
+int PartialSolutionCell::GetOrangeInWay()
+{
+    // on ajoute le nombre de cases sur les lignes et diagonales afin d'empecher le programme de poser un orange sur un endroit en bloquant d'autres
+    int orangeInTheWay =  grid->size - 1 // horizontal
+                        + grid->size - 1; // vertical
+    for (int i = 1; i < grid->size; i++)
+    {
+        if (grid->IsPosInGrid(xPos + i, yPos + i))
+                orangeInTheWay += 1;
+        if (grid->IsPosInGrid(xPos + i, yPos - i))
+                orangeInTheWay += 1;
+        if (grid->IsPosInGrid(xPos - i, yPos - i))
+                orangeInTheWay += 1;
+        if (grid->IsPosInGrid(xPos - i, yPos + i))
+                orangeInTheWay += 1;
+    }
+    return orangeInTheWay;
 }
 
 PartialSolutionCell::PartialSolutionCell() {}
@@ -51,7 +69,7 @@ PartialSolutionCell::PartialSolutionCell(Grid* G, int x, int y)
     this->xPos = x;
     this->yPos = y;
 
-    this->scores = new int[5];
+    this->scores = new float[5];
     this->collapsedColor = 'B';
 }
 
@@ -59,7 +77,7 @@ bool PartialSolutionCell::IsCollapsed()
 {
     return this->collapsedColor != 'B';
 }
-int PartialSolutionCell::GetMaxScore()
+float PartialSolutionCell::GetMaxScore()
 {
     return this->maxScore;
 }
@@ -237,9 +255,88 @@ void PartialSolutionCell::Collapse_Orange(PartialSolution* Solution)
         }
     }
 }
+void PartialSolutionCell::ChangeNearbyOrange(PartialSolution* Solution)
+{
+    for (int i = 0; i < Solution->size; i++)
+    {
+        // vertical
+        if (!Solution->cells[xPos][i].IsCollapsed())
+        {
+            std::cout << "change from " << Solution->cells[xPos][i].scores[4];
 
+            Solution->cells[xPos][i].scores[4] += 1. / (grid->size * grid->size);
+            Solution->cells[xPos][i].RefreshMaxScore(Solution->negative_positive_diff);
 
-/////////////////////////////////////////////
+            std::cout << " to " << Solution->cells[xPos][i].scores[4] << "\n";
+        }
+
+        // horizontal
+        if (!Solution->cells[i][yPos].IsCollapsed())
+        {
+            std::cout << "change from " << Solution->cells[i][yPos].scores[4];
+            
+            Solution->cells[i][yPos].scores[4] += 1. / (grid->size * grid->size);
+            Solution->cells[i][yPos].RefreshMaxScore(Solution->negative_positive_diff);
+
+            std::cout << " to " << Solution->cells[i][yPos].scores[4] << "\n";
+        }
+
+        // Diagonal up right
+        if (Solution->IsPosInGrid(xPos + i, yPos + i))
+        {
+            if (!Solution->cells[xPos + i][yPos + i].IsCollapsed())
+            {
+                std::cout << "change from " << Solution->cells[xPos + i][yPos + i].scores[4];
+            
+                Solution->cells[xPos + i][yPos + i].scores[4] += 1. / (grid->size * grid->size);
+                Solution->cells[xPos + i][yPos + i].RefreshMaxScore(Solution->negative_positive_diff);
+
+                std::cout << " to " << Solution->cells[xPos + i][yPos + i].scores[4] << "\n";
+            }
+        }
+        // Diagonal up left
+        if (Solution->IsPosInGrid(xPos - i, yPos + i))
+        {
+            if (!Solution->cells[xPos - i][yPos + i].IsCollapsed())
+            {
+                std::cout << "change from " << Solution->cells[xPos - i][yPos + i].scores[4];
+            
+                Solution->cells[xPos - i][yPos + i].scores[4] += 1. / (grid->size * grid->size);
+                Solution->cells[xPos - i][yPos + i].RefreshMaxScore(Solution->negative_positive_diff);
+
+                std::cout << " to " << Solution->cells[xPos - i][yPos + i].scores[4] << "\n";
+            }
+        }
+        // Diagonal down right
+        if (Solution->IsPosInGrid(xPos + i, yPos - i))
+        {
+            if (!Solution->cells[xPos + i][yPos - i].IsCollapsed())
+            {
+                std::cout << "change from " << Solution->cells[xPos + i][yPos - i].scores[4];
+            
+                Solution->cells[xPos + i][yPos - i].scores[4] += 1. / (grid->size * grid->size);
+                Solution->cells[xPos + i][yPos - i].RefreshMaxScore(Solution->negative_positive_diff);
+
+                std::cout << " to " << Solution->cells[xPos + i][yPos - i].scores[4] << "\n";
+            }
+        }
+        // Diagonal down left
+        if (Solution->IsPosInGrid(xPos - i, yPos - i))
+        {
+            if (!Solution->cells[xPos - i][yPos - i].IsCollapsed())
+            {
+                std::cout << "change from " << Solution->cells[xPos - i][yPos - i].scores[4];
+            
+                Solution->cells[xPos - i][yPos - i].scores[4] += 1. / (grid->size * grid->size);
+                Solution->cells[xPos - i][yPos - i].RefreshMaxScore(Solution->negative_positive_diff);
+
+                std::cout << " to " << Solution->cells[xPos - i][yPos - i].scores[4] << "\n";
+            }
+        }
+    }
+
+}
+
 void PartialSolutionCell::Collapse(PartialSolution* Solution)
 {
     if (this->grid->Read(this->xPos, this->yPos) > 0)
@@ -279,6 +376,8 @@ void PartialSolutionCell::Collapse(PartialSolution* Solution)
         break;
     }
 
+    Solution->Print();
+    ChangeNearbyOrange(Solution);
     delete[] scores;
 }
 
@@ -312,11 +411,11 @@ PartialSolution::PartialSolution(Grid* G)
     }
 }
 
-int PartialSolution::GetBestCell(int& x, int& y)
+float PartialSolution::GetBestCell(int& x, int& y)
 {
     x = -1;
     y = -1;
-    int max = 0;
+    float max = 0;
 
     for (int i = 0; i < this->size; ++i)
     for (int j = 0; j < this->size; ++j)
@@ -341,13 +440,13 @@ Solution PartialSolution::Solve()
     for (int i = 0; i < this->size*this->size; ++i)
     {
         std::cout << "diff : " << negative_positive_diff << "\n";
-        if (this->GetBestCell(x, y) > this->ComputeBlue())
-            this->cells[x][y].Collapse(this);
-        else break;
-        // int value = this->GetBestCell(x, y);
-        // std::cout << "\nbest : " << x << " " << y << " : ";
-        // std::cin >> x >> y;
-        // this->cells[x][y].Collapse(this);
+        // if (this->GetBestCell(x, y) > this->ComputeBlue())
+        //     this->cells[x][y].Collapse(this);
+        // else break;
+        int value = this->GetBestCell(x, y);
+        std::cout << "\nbest : " << x << " " << y << " : ";
+        std::cin >> x >> y;
+        this->cells[x][y].Collapse(this);
         this->Print();
     }
 
@@ -393,7 +492,7 @@ void PartialSolution::Print()
             }
             else
             {
-                int value = this->cells[x][y].GetMaxScore();
+                float value = this->cells[x][y].GetMaxScore();
                 switch (this->cells[x][y].GetBestColor())
                 {
                 case 0: // red

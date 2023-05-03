@@ -8,20 +8,22 @@ class PartialSolutionCell
 private:
     int xPos, yPos;
 
-    int maxScore;
+    float maxScore;
 public:
     Grid* grid;
-    int* scores;
+    float* scores;
     char collapsedColor;
 
     PartialSolutionCell(Grid* G, int x, int y);
     PartialSolutionCell();
     
     void InitScores(int negative_positive_diff);
+    int GetOrangeInWay();
+    void ChangeNearbyOrange(PartialSolution* Solution);
     void Delete();
 
     bool IsCollapsed();
-    int GetMaxScore();
+    float GetMaxScore();
     int GetBestColor();
     void RefreshMaxScore(int negative_positive_diff);
     void Collapse(PartialSolution* Solution);
@@ -46,7 +48,7 @@ public:
 
     bool IsPosInGrid(int x, int y);
     int ComputeBlue();
-    int GetBestCell(int& x, int& y);
+    float GetBestCell(int& x, int& y);
     Solution Solve();
 
     void Print();

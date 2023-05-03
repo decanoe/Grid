@@ -12,6 +12,7 @@ public:
     int Read(int x, int y) const;
     int& Access(int x, int y);
     void Print();
+    bool IsPosInGrid(int x, int y);
 };
 
 class Solution

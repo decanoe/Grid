@@ -42,6 +42,11 @@ void Grid::Print()
     }
 }
 
+bool Grid::IsPosInGrid(int x, int y)
+{
+    return x >= 0 && y >= 0 && x < this->size && y < this->size;
+}
+
 // ======================================================================================================
 
 Solution::Solution(int size)
