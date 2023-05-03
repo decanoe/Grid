@@ -144,7 +144,7 @@ void PartialSolutionCell::Collapse_Green(PartialSolution* Solution)
     {
         if (!Solution->IsPosInGrid(xPos + x, yPos + y)) continue;
 
-        if (!Solution->cells[xPos + x][yPos + y].IsCollapsed() && x != 0 && y != 0)
+        if (!Solution->cells[xPos + x][yPos + y].IsCollapsed())
         {
             Solution->cells[xPos + x][yPos + y].scores[1] -= this->grid->penalty;
             Solution->cells[xPos + x][yPos + y].RefreshMaxScore(Solution->negative_positive_diff);
@@ -479,6 +479,8 @@ void PartialSolution::Print()
             else
             {
                 float value = this->cells[x][y].GetMaxScore();
+                // std::cout << "\033[32m" << this->cells[x][y].scores[1] << "\033[0m\t";
+                // continue;
                 switch (this->cells[x][y].GetBestColor())
                 {
                 case 0: // red

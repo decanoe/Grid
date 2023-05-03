@@ -6,8 +6,8 @@
 
 int main()
 {
-    Grid G = ReadGrid("./test_grids/grid_exemple.txt");
-    //Grid G = ReadGrid("./test_grids/grid_exemple.txt");
+    Grid G = ReadGrid("./test_grids/probleme_4_a.txt");
+    // Grid G = ReadGrid("./test_grids/grid_exemple.txt");
     // G.Print();
     // std::cout << "\n";
 
