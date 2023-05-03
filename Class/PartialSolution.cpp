@@ -431,7 +431,7 @@ void PartialSolution::Delete()
     {
         for (int y = 0; y < this->size; y++)
         {
-            if (this->cells[x][y].IsCollapsed())
+            if (!this->cells[x][y].IsCollapsed())
                 this->cells[x][y].Delete();
         }
         delete[] this->cells[x];
