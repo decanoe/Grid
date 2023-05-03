@@ -1,3 +1,12 @@
+4
+V N N V
+J B B B
+O J R N
+N B B O
+
+score attendu au 4a :
+58
+
 12
 V N V N N N V N V N V N 
 N B B O O B B O N B B O

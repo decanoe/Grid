@@ -36,7 +36,7 @@ void PartialSolutionCell::InitScores(int negative_positive_diff)
         this->maxScore = this->scores[3];
     
     //================= Orange =======================
-    this->scores[4] = 1 - ((float)GetOrangeInWay() / (grid->size * grid->size + 2));
+    this->scores[4] = 1 - (float)GetOrangeInWay() / (grid->size * grid->size + 2);
     if (this->maxScore < this->scores[4])
         this->maxScore = this->scores[4];
     
@@ -183,7 +183,6 @@ void PartialSolutionCell::Collapse_Black(PartialSolution* Solution)
                 blackSum += grid->Read(x, y) - 1;
             }
         }
-        std::cout << blackSum;
 
         for (int x = 0; x < Solution->size; x++)
         for (int y = 0; y < Solution->size; y++)
@@ -426,7 +425,7 @@ Solution PartialSolution::Solve()
     for (int i = 0; i < this->size*this->size; ++i)
     {
         std::cout << "diff : " << negative_positive_diff << "\n";
-        if (this->GetBestCell(x, y) > this->ComputeBlue())
+        if (this->GetBestCell(x, y) >= this->ComputeBlue())
             this->cells[x][y].Collapse(this);
         else break;
         // int value = this->GetBestCell(x, y);

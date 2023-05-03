@@ -11,18 +11,18 @@ int main()
     // G.Print();
     // std::cout << "\n";
 
-    // Solution S = ReadSolution("./test_grids/solve_exemple.txt");
-    // S.Print();
-
-    // std::cout << computeScore(G, S);
-
-    PartialSolution PS = PartialSolution(&G);
-    Solution S = PS.Solve();
-    G.Print();
+    Solution S = ReadSolution("./test_grids/solve_exemple.txt");
     S.Print();
+
     std::cout << computeScore(G, S);
 
-    PS.Delete();
+    // PartialSolution PS = PartialSolution(&G);
+    // Solution S = PS.Solve();
+    // G.Print();
+    // S.Print();
+    // std::cout << computeScore(G, S);
+
+    // PS.Delete();
 
     return 0;
 }
