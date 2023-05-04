@@ -393,6 +393,13 @@ PartialSolution::PartialSolution(Grid* G)
     }
 }
 
+int randomIndex(int length)
+{
+    float x = std::rand() % length;
+    x /= (float)length;
+    x *= x;
+    return (int)roundf(x * length);
+}
 float PartialSolution::GetBestCell(int& x, int& y)
 {
     int* xList = new int[this->size];
@@ -431,7 +438,7 @@ float PartialSolution::GetBestCell(int& x, int& y)
         }
     }
     
-    int chosenIndex = std::rand() % this->size;
+    int chosenIndex = randomIndex(this->size);
     x = xList[chosenIndex];
     y = yList[chosenIndex];
     float max = maxList[chosenIndex];
