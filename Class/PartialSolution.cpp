@@ -29,7 +29,7 @@ void PartialSolutionCell::InitScores(int negative_positive_diff)
         this->maxScore = this->scores[1];
 
     //================= Yellow =======================
-    this->scores[2] = grid->Read(xPos, yPos) - grid->penalty;
+    this->scores[2] = grid->Read(xPos, yPos);
     if (this->maxScore < this->scores[2])
         this->maxScore = this->scores[2];
 
@@ -152,7 +152,7 @@ void PartialSolutionCell::Collapse_Yellow(PartialSolution* Solution)
     {
         if (!Solution->IsPosInGrid(xPos + x, yPos + y)) continue;
 
-        if (!Solution->cells[xPos + x][yPos + y].IsCollapsed() && x != 0 && y != 0)
+        if (!Solution->cells[xPos + x][yPos + y].IsCollapsed())
         {
             Solution->cells[xPos + x][yPos + y].scores[2] = this->grid->Read(xPos + x, yPos + y);
             Solution->cells[xPos + x][yPos + y].RefreshMaxScore(Solution->negative_positive_diff);

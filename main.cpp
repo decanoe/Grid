@@ -6,7 +6,7 @@
 
 int main()
 {
-    Grid G = ReadGrid("./test_grids/probleme_4_a.txt");
+    Grid G = ReadGrid("./test_grids/probleme_12_a.txt");
     // Grid G = ReadGrid("./test_grids/grid_exemple.txt");
     // G.Print();
     // std::cout << "\n";
@@ -15,16 +15,16 @@ int main()
     // S.Print();
 
     // std::cout << computeScore(G, S);
-    for (int i = 0; i < 128; i++)
+    for (int i = 0; i < 128*8; i++)
     {
         PartialSolution PS = PartialSolution(&G);
         Solution S = PS.Solve();
 
         int score = computeScore(G, S);
-        if (score >= 55)
+        if (score >= 633)
         {
             // G.Print();
-            // S.Print();
+            S.Print();
             std::cout << score << "\n";
         }
 
