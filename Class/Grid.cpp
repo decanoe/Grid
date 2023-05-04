@@ -86,19 +86,19 @@ void Solution::Print()
             switch (this->Read(x, y))
             {
             case 'R': // red
-                std::cout << "\033[41m" << this->Read(x, y) << "(R)\t\033[0m";
+                std::cout << "\033[41m" << this->Read(x, y) << "\t\033[0m";
                 break;
             case 'V': // green
-                std::cout << "\033[42m" << this->Read(x, y) << "(V)\t\033[0m";
+                std::cout << "\033[42m" << this->Read(x, y) << "\t\033[0m";
                 break;
             case 'J': // yellow
-                std::cout << "\033[43m" << this->Read(x, y) << "(J)\t\033[0m";
+                std::cout << "\033[43m" << this->Read(x, y) << "\t\033[0m";
                 break;
             case 'N': // black
-                std::cout << "\033[30;47m" << this->Read(x, y) << "(N)\t\033[0m";
+                std::cout << "\033[30;47m" << this->Read(x, y) << "\t\033[0m";
                 break;
             case 'O': // orange
-                std::cout << "\033[45;33m" << this->Read(x, y) << "(O)\t\033[0m";
+                std::cout << "\033[45;33m" << this->Read(x, y) << "\t\033[0m";
                 break;
             
             default:
