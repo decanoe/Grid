@@ -154,7 +154,7 @@ void PartialSolutionCell::Collapse_Yellow(PartialSolution* Solution)
 
         if (!Solution->cells[xPos + x][yPos + y].IsCollapsed())
         {
-            Solution->cells[xPos + x][yPos + y].scores[2] = this->grid->Read(xPos + x, yPos + y);
+            Solution->cells[xPos + x][yPos + y].scores[2] = this->grid->Read(xPos + x, yPos + y) + Solution->penalty / 2;
             Solution->cells[xPos + x][yPos + y].RefreshMaxScore(Solution->negative_positive_diff);
         }
     }
@@ -402,14 +402,15 @@ int randomIndex(int length)
 }
 float PartialSolution::GetBestCell(int& x, int& y)
 {
-    int* xList = new int[this->size];
-    int* yList = new int[this->size];
-    float* maxList = new float[this->size];
-    for (int i = 0; i < this->size; i++)
+    int diffNb = this->size;
+    int* xList = new int[diffNb];
+    int* yList = new int[diffNb];
+    float* maxList = new float[diffNb];
+    for (int i = 0; i < diffNb; i++)
     {
         xList[i] = -1;
     }
-    
+    int nbValues = 0;
 
     for (int i = 0; i < this->size; ++i)
     for (int j = 0; j < this->size; ++j)
@@ -424,6 +425,7 @@ float PartialSolution::GetBestCell(int& x, int& y)
                 xList[index] = i;
                 yList[index] = j;
                 maxList[index] = score;
+                nbValues += 1;
                 break;
             }
             if (score > maxList[index])
@@ -438,7 +440,7 @@ float PartialSolution::GetBestCell(int& x, int& y)
         }
     }
     
-    int chosenIndex = randomIndex(this->size);
+    int chosenIndex = randomIndex(nbValues);
     x = xList[chosenIndex];
     y = yList[chosenIndex];
     float max = maxList[chosenIndex];
@@ -456,7 +458,9 @@ Solution PartialSolution::Solve()
     for (int i = 0; i < this->size*this->size; ++i)
     {
         if (this->GetBestCell(x, y) >= this->ComputeBlue())
+        {
             this->cells[x][y].Collapse(this);
+        }
         else break;
         // this->Print();
     }

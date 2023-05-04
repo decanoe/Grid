@@ -6,8 +6,8 @@
 
 int main()
 {
-    Grid G = ReadGrid("./test_grids/probleme_12_a.txt");
-    // Grid G = ReadGrid("./test_grids/grid_exemple.txt");
+    // Grid G = ReadGrid("./test_grids/probleme_12_a.txt");
+    Grid G = ReadGrid("./test_grids/grid_exemple.txt");
     // G.Print();
     // std::cout << "\n";
 
@@ -15,21 +15,31 @@ int main()
     // S.Print();
 
     // std::cout << computeScore(G, S);
-    for (int i = 0; i < 128*8; i++)
+    Solution best = Solution(0);
+    int best_score = 0;
+    int nb = 0;
+    for (int i = 0; i < 128*128; i++)
     {
         PartialSolution PS = PartialSolution(&G);
         Solution S = PS.Solve();
 
         int score = computeScore(G, S);
-        if (score >= 633)
+        if (best_score < score)
         {
-            // G.Print();
-            S.Print();
+            best_score = score;
+            nb = 1;
+            best = S;
             std::cout << score << "\n";
         }
+        else if (score == best_score)
+            nb += 1;
 
         PS.Delete();
     }
+
+    std::cout << "best grid :\n";
+    best.Print();
+    std::cout << "\nscore : " << best_score << " (nb of possibility found : " << nb << ")";
 
     return 0;
 }
