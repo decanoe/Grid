@@ -2,17 +2,20 @@
 #include "../Functions/Compute.h"
 #include "Grid.h"
 #include <iostream>
+#include <cmath>
 
-bool PartialSolution::IsPosInGrid(int x, int y)
+PartialSolutionCell::PartialSolutionCell() {}
+PartialSolutionCell::PartialSolutionCell(Grid* G, int x, int y)
 {
-    return x >= 0 && y >= 0 && x < this->size && y < this->size;
-}
-int PartialSolution::ComputeBlue()
-{
-    if (this->negative_positive_diff <= 0) return 0;
-    return -this->negative_positive_diff * this->penalty;
+    this->grid = G;
+    this->xPos = x;
+    this->yPos = y;
+
+    this->scores = new float[5];
+    this->collapsedColor = 'B';
 }
 
+// Premiers placements
 void PartialSolutionCell::InitScores(int negative_positive_diff)
 {
     //================= Red ==========================
@@ -60,17 +63,6 @@ int PartialSolutionCell::GetOrangeInWay()
                 orangeInTheWay += 1;
     }
     return orangeInTheWay;
-}
-
-PartialSolutionCell::PartialSolutionCell() {}
-PartialSolutionCell::PartialSolutionCell(Grid* G, int x, int y)
-{
-    this->grid = G;
-    this->xPos = x;
-    this->yPos = y;
-
-    this->scores = new float[5];
-    this->collapsedColor = 'B';
 }
 
 bool PartialSolutionCell::IsCollapsed()
@@ -315,15 +307,10 @@ void PartialSolutionCell::ChangeNearbyOrange(PartialSolution* Solution)
 void PartialSolutionCell::Collapse(PartialSolution* Solution)
 {
     if (this->grid->Read(this->xPos, this->yPos) > 0)
-    {
-        std::cout << "positive removed (" << this->grid->Read(this->xPos, this->yPos) << ") at " << xPos << " " << yPos << "\n";
         Solution->negative_positive_diff += 1;
-    }
     else if (this->grid->Read(this->xPos, this->yPos) < 0)
-    {
-        std::cout << "negative removed (" << this->grid->Read(this->xPos, this->yPos) << ") at " << xPos << " " << yPos << "\n";
         Solution->negative_positive_diff -= 1;
-    }
+    
     if (Solution->negative_positive_diff > -2)
     {
         // refresh to count blue count change
@@ -368,6 +355,16 @@ void PartialSolutionCell::Collapse(PartialSolution* Solution)
 
 
 
+// Grille
+bool PartialSolution::IsPosInGrid(int x, int y)
+{
+    return x >= 0 && y >= 0 && x < this->size && y < this->size;
+}
+int PartialSolution::ComputeBlue()
+{
+    if (this->negative_positive_diff <= 0) return 0;
+    return -this->negative_positive_diff * this->penalty;
+}
 
 PartialSolution::PartialSolution(Grid* G)
 {
@@ -398,21 +395,50 @@ PartialSolution::PartialSolution(Grid* G)
 
 float PartialSolution::GetBestCell(int& x, int& y)
 {
-    x = -1;
-    y = -1;
-    float max = 0;
+    int* xList = new int[this->size];
+    int* yList = new int[this->size];
+    float* maxList = new float[this->size];
+    for (int i = 0; i < this->size; i++)
+    {
+        xList[i] = -1;
+    }
+    
 
     for (int i = 0; i < this->size; ++i)
     for (int j = 0; j < this->size; ++j)
     {
         if (this->cells[i][j].IsCollapsed()) continue;
-        if ((x == -1) or (this->cells[i][j].GetMaxScore() > max))
+        float score = this->cells[i][j].GetMaxScore();
+
+        for (int index = 0; index < this->size; index++)
         {
-            x = i;
-            y = j;
-            max = this->cells[x][y].GetMaxScore();
+            if (xList[index] == -1)
+            {
+                xList[index] = i;
+                yList[index] = j;
+                maxList[index] = score;
+                break;
+            }
+            if (score > maxList[index])
+            {
+                xList[index] = i;
+                yList[index] = j;
+
+                float temp = maxList[index];
+                maxList[index] = score;
+                score = temp;
+            }
         }
     }
+    
+    int chosenIndex = std::rand() % this->size;
+    x = xList[chosenIndex];
+    y = yList[chosenIndex];
+    float max = maxList[chosenIndex];
+
+    delete[] xList;
+    delete[] yList;
+    delete[] maxList;
 
     return max;
 }
@@ -420,19 +446,12 @@ Solution PartialSolution::Solve()
 {
     int x, y;
 
-    this->Print();
-
     for (int i = 0; i < this->size*this->size; ++i)
     {
-        std::cout << "diff : " << negative_positive_diff << "\n";
         if (this->GetBestCell(x, y) >= this->ComputeBlue())
             this->cells[x][y].Collapse(this);
         else break;
-        // int value = this->GetBestCell(x, y);
-        // std::cout << "\nbest : " << x << " " << y << " : ";
-        // std::cin >> x >> y;
-        // this->cells[x][y].Collapse(this);
-        this->Print();
+        // this->Print();
     }
 
     Solution S = Solution(this->size);
@@ -456,19 +475,19 @@ void PartialSolution::Print()
                 switch (this->cells[x][y].collapsedColor)
                 {
                 case 'R': // red
-                    std::cout << "\033[41m " << value << " (R)\t\033[0m";
+                    std::cout << "\033[41m" << value << "(R)\t\033[0m";
                     break;
                 case 'V': // green
-                    std::cout << "\033[42m " << value << " (V)\t\033[0m";
+                    std::cout << "\033[42m" << value << "(V)\t\033[0m";
                     break;
                 case 'J': // yellow
-                    std::cout << "\033[43m " << value << " (J)\t\033[0m";
+                    std::cout << "\033[43m" << value << "(J)\t\033[0m";
                     break;
                 case 'N': // black
-                    std::cout << "\033[30;47m " << value << " (N)\t\033[0m";
+                    std::cout << "\033[30;47m" << value << "(N)\t\033[0m";
                     break;
                 case 'O': // orange
-                    std::cout << "\033[45;33m " << value << " (O)\t\033[0m";
+                    std::cout << "\033[45;33m" << value << "(O)\t\033[0m";
                     break;
                 
                 default:
@@ -478,6 +497,7 @@ void PartialSolution::Print()
             else
             {
                 float value = this->cells[x][y].GetMaxScore();
+                value = std::roundf(value * 1000) / 1000.0;
                 // std::cout << "\033[32m" << this->cells[x][y].scores[1] << "\033[0m\t";
                 // continue;
                 switch (this->cells[x][y].GetBestColor())
