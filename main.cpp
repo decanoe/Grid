@@ -46,7 +46,7 @@ int main(int argc, char** argv)
         }
         if (strcmp(argv[i], "-t") == 0)
         {
-            if (maxTime != 10)
+            if (maxTime != 60)
             {
                 std::cerr << "ERROR : -t was used twice, only one duration is supported";
                 return 0;
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
 
     std::cout << "best grid :\n";
     best.Print();
-    std::cout << "\nscore : " << best_score << " (time spent : " << ((float)(clock() - startTime))/CLOCKS_PER_SEC << "s)";
+    std::cout << "\nscore : " << best_score << " (time spent : " << ((float)(clock() - startTime))/CLOCKS_PER_SEC << "s with prints)";
 
     if (outputPath != "")
         WriteSolution(G, best, outputPath);
