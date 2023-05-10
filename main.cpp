@@ -64,6 +64,7 @@ int main(int argc, char** argv)
 
     Solution best = Solution(0);
     int best_score = 0;
+    clock_t best_time = 0;
 
     clock_t startTime = clock();
     clock_t lastTime = 0;
@@ -77,6 +78,7 @@ int main(int argc, char** argv)
         int score = computeScore(G, S);
         if (best_score < score)
         {
+            best_time = clock() - startTime;
             best_score = score;
             best = S;
             std::cout << score << "\n";
@@ -87,7 +89,7 @@ int main(int argc, char** argv)
         lastTime = clock() - t;
     }
 
-    std::cout << "best grid :\n";
+    std::cout << "best grid (found in " << (float)best_time/CLOCKS_PER_SEC << "s) :\n";
     best.Print();
     std::cout << "\nscore : " << best_score << " (time spent : " << ((float)(clock() - startTime))/CLOCKS_PER_SEC << "s with prints)";
 
