@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <string.h>
+#include <stdio.h>
 #include <time.h>
 #include "Functions/InputOutput.h"
 #include "Functions/Compute.h"
@@ -21,14 +22,16 @@ int main(int argc, char** argv)
             "\n\t<file>  \t: the path to the file containing the grid" <<
             "\n\t-o <file>\t: give a file path on which write the result" <<
             "\n\t-t <duration>\t: give a time limit (in seconds) to the calculation (default is 60s)";
+            "\n\t-s <seed>\t: give a seed to the search (integer). Set 0 to use time as a seed";
         return 0;
     }
 
     std::string inputPath = argv[1];
     std::string outputPath = "";
     int maxTime = 60;
+    bool seedSet = false;
 
-    for (int i = 2; i < argc; i++)
+    for (int i = 2; i < argc; i += 2)
     {
         if (strcmp(argv[i], "-o") == 0)
         {
@@ -57,6 +60,25 @@ int main(int argc, char** argv)
                 return 0;
             }
             maxTime = std::stoi(argv[i + 1]);
+        }
+        if (strcmp(argv[i], "-s") == 0)
+        {
+            if (seedSet)
+            {
+                std::cerr << "ERROR : -t was used twice, only one seed is supported";
+                return 0;
+            }
+            if (i + 1 >= argc)
+            {
+                std::cerr << "ERROR : -t was used but no seed were provided after it";
+                return 0;
+            }
+
+            if (strcmp(argv[i + 1], "0") == 0)
+                std::srand(time(NULL));
+            else
+                std::srand(std::stoi(argv[i + 1]));
+            seedSet = true;
         }
     }
     
