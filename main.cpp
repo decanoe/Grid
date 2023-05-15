@@ -21,7 +21,7 @@ int main(int argc, char** argv)
             "arguments :" << 
             "\n\t<file>  \t: the path to the file containing the grid" <<
             "\n\t-o <file>\t: give a file path on which write the result" <<
-            "\n\t-t <duration>\t: give a time limit (in seconds) to the calculation (default is 60s)";
+            "\n\t-t <duration>\t: give a time limit (in seconds) to the calculation (default is 60s)"<<
             "\n\t-s <seed>\t: give a seed to the search (integer). Set 0 to use time as a seed";
         return 0;
     }
