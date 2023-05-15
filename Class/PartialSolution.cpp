@@ -484,6 +484,29 @@ Solution PartialSolution::Solve()
         // this->Print();
     }
 
+    // testing for red
+    int bestPosX = -1;
+    int bestPosY = -1;
+    for (int i = 0; i < this->size; ++i)
+    for (int j = 0; j < this->size; ++j)
+    {
+        if (S.Read(i, j) == 'R')
+            return S;
+        
+        if (bestPosX == -1)
+        {
+            bestPosX = i;
+            bestPosY = j;
+            continue;
+        }
+        if (S.Read(i, j) < S.Read(bestPosX, bestPosY))
+        {
+            bestPosX = i;
+            bestPosY = j;
+        }
+    }
+
+    S.Access(bestPosX, bestPosY) = 'R';
     return S;
 }
 
