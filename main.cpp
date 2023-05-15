@@ -103,7 +103,7 @@ int main(int argc, char** argv)
             best_time = clock() - startTime;
             best_score = score;
             best = S;
-            std::cout << score << "a\n";
+            std::cout << score << "\n";
         }
 
         PS.Delete();
