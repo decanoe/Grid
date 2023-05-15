@@ -100,7 +100,7 @@ void Solution::Print()
             case 'O': // orange
                 std::cout << "\033[45;33m O \033[0m";
                 break;
-            case 'B': // orange
+            case 'B': // blue
                 std::cout << "\033[44m B \033[0m";
                 break;
             

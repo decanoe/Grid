@@ -455,20 +455,34 @@ Solution PartialSolution::Solve()
 {
     int x, y;
 
+    Solution S = Solution(this->size);
+    Solution Scopy = Solution(this->size);
+    for (int i = 0; i < this->size; ++i)
+    for (int j = 0; j < this->size; ++j)
+    {
+        S.Access(i, j) = this->cells[i][j].collapsedColor;
+        Scopy.Access(i, j) = this->cells[i][j].collapsedColor;
+    }
+    
     for (int i = 0; i < this->size*this->size; ++i)
     {
         if (this->GetBestCell(x, y) >= this->ComputeBlue())
         {
             this->cells[x][y].Collapse(this);
+            Scopy.Access(x, y) = this->cells[x][y].collapsedColor;
+            
+            if (computeScore(*this->cells[x][y].grid, Scopy) > computeScore(*this->cells[x][y].grid, S))
+            {
+                for (int i = 0; i < this->size; ++i)
+                for (int j = 0; j < this->size; ++j)
+                {
+                    S.Access(i, j) = this->cells[i][j].collapsedColor;
+                }
+            }
         }
         else break;
         // this->Print();
     }
-
-    Solution S = Solution(this->size);
-    for (int i = 0; i < this->size; ++i)
-    for (int j = 0; j < this->size; ++j)
-        S.Access(i, j) = this->cells[i][j].collapsedColor;
 
     return S;
 }

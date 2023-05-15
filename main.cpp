@@ -98,12 +98,12 @@ int main(int argc, char** argv)
         Solution S = PS.Solve();
 
         int score = computeScore(G, S);
-        if (best_score < score)
+        if (best_score < score || best.size == 0)
         {
             best_time = clock() - startTime;
             best_score = score;
             best = S;
-            std::cout << score << "\n";
+            std::cout << score << "a\n";
         }
 
         PS.Delete();
