@@ -122,7 +122,7 @@ void PartialSolutionCell::Collapse_Red(PartialSolution* Solution)
     {
         if (!Solution->cells[x][y].IsCollapsed())
         {
-            Solution->cells[x][y].scores[0] = -2048;
+            Solution->cells[x][y].scores[0] = -2048* std::abs(this->grid->penalty);
             Solution->cells[x][y].RefreshMaxScore(Solution->negative_positive_diff);
         }
     }
