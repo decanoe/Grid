@@ -1,20 +1,31 @@
-**Grid**
+Grid
+=====
 pour compiler :
-\- se placer dans le repertoir *build*
-cas 1 cmake est installé et fonctionne:
-    \- executer la commande *cmake ..*
-    \- executer la commande *make*
-cas 2 cmake n'est pas installé ou ne fonctionne pas :
-    \- executer les commandes suivantes :
-        *g++ -Wall -C ../Class/Grid.cpp -o ./Grid.o*
-        *g++ -Wall -C ../Class/PartialSolution.cpp -o ./PartialSolution.o*
-        *g++ -Wall -C ../Funcions/Compute.cpp -o ./Compute.o*
-        *g++ -Wall -C ../Funcions/InputOutput.cpp -o ./InputOutput.o*
-        *g++ -Wall -C ../main.cpp -o ./main.o*
-    \- executer la commande
-        *g++ ./main.o ./InputOutput.o ./Compute.o ./PartialSolution.o ./Grid.o -o ./Grid.out*
+---------------
+### si cmake est installé et fonctionne:
+1. se placer dans le répertoire *build*
+2. exécuter la commande
+    <br>*cmake ..*
+3. exécuter la commande
+    <br>*make*
+### si cmake n'est pas installé ou ne fonctionne pas :
+1. se placer dans le répertoire *build*
+2. exécuter les commandes suivantes :
+        <br>*g++ -Wall -C ../Class/Grid.cpp -o ./Grid.o*
+        <br>*g++ -Wall -C ../Class/PartialSolution.cpp -o ./PartialSolution.o*
+        <br>*g++ -Wall -C ../Funcions/Compute.cpp -o ./Compute.o*
+        <br>*g++ -Wall -C ../Funcions/InputOutput.cpp -o ./InputOutput.o*
+        <br>*g++ -Wall -C ../main.cpp -o ./main.o*
+3. exécuter la commande
+        <br>*g++ ./main.o ./InputOutput.o ./Compute.o ./PartialSolution.o ./Grid.o -o ./Grid.out*
 
-pour executer le programme :
-    \- se placer dans le même repertoire que l'executable
-    \- executer la commande suivante :
-        *Grid.out <fichier>*
+pour exécuter le programme :
+----------------------------
+1. se placer dans le même répertoire que l'exécutable
+2. exécuter la commande suivante :
+    <br>*Grid.out <fichier\>*
+    <br>où <fichier\> est le chemin vers le fichier texte contenant la grille à résoudre
+3. arguments suplémentaires :
+    - \-t <temps\> *pour donner une limite de temps en secondes (par défaut 60s)*
+    - \-s <seed\> *pour indiquer une seed (0 pour une seed aléatoire)*
+    - \-o <fichier\> *pour indiquer un fichier dans lequel écrire la solution trouvée*
