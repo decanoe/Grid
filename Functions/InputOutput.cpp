@@ -8,6 +8,12 @@ Grid ReadGrid(std::string filePath)
 {
     std::ifstream file = std::ifstream(filePath);
 
+    if (!file)
+    {
+        std::cerr << "ERROR : File do not exist";
+        return Grid(0, 0);
+    }
+
     int size, penalty;
     file >> size >> penalty;
     Grid G(size, penalty);

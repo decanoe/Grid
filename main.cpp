@@ -83,6 +83,11 @@ int main(int argc, char** argv)
     }
     
     Grid G = ReadGrid(inputPath);
+    if (G.size == 0)
+    {
+        std::cerr << "Ended without result";
+        return 0;
+    }
 
     Solution best = Solution(0);
     int best_score = 0;
