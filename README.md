@@ -1,5 +1,6 @@
 Grid
 =====
+**Nous conseillons de prendre le fichier *<code source.zip\>* pour tester le code et de suivre les instructions suivantes.**
 pour compiler :
 ---------------
 ### si cmake est installé et fonctionne:
